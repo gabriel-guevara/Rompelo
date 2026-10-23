@@ -8,6 +8,7 @@ import '../../features/games/presentation/play_placeholder_screen.dart';
 import '../../features/results/presentation/results_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/setup/presentation/configure_tab_screen.dart';
+import '../../features/setup/presentation/game_config_screen.dart';
 import '../widgets/app_shell_scaffold.dart';
 import 'app_routes.dart';
 
@@ -56,8 +57,8 @@ GoRouter createAppRouter() {
                 GoRoute(
                   path: ':${AppRoutes.gameParam}',
                   redirect: _redirectUnknownGame,
-                  builder: (context, state) => GameConfigPlaceholderScreen(
-                    game: gameById(state.pathParameters[AppRoutes.gameParam]!)!,
+                  builder: (context, state) => gameConfigScreenFor(
+                    gameById(state.pathParameters[AppRoutes.gameParam]!)!,
                   ),
                 ),
               ],

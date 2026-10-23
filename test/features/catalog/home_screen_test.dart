@@ -56,7 +56,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(currentPath(container), '/configurar/impostor');
-    expect(find.text('Empezar partida'), findsOneWidget);
+    expect(find.text('¿Cuántos impostores?'), findsOneWidget);
   });
 
   testWidgets('los chips de vibra filtran el catálogo', (tester) async {

@@ -14,7 +14,9 @@ class SelectionTile extends StatelessWidget {
     required this.onTap,
     this.subtitle,
     this.icon,
+    this.emoji,
     this.badge,
+    this.badgeColor,
     this.activeColor = AppColors.secondary,
     this.activeShadow = AppColors.shadowWine,
     this.activeTint = AppColors.secondaryFixed,
@@ -24,8 +26,14 @@ class SelectionTile extends StatelessWidget {
   final String? subtitle;
   final IconData? icon;
 
+  /// Alternativa a [icon] (mazos con emoji del mockup del Impostor).
+  final String? emoji;
+
   /// Insignia corta junto al título, p. ej. "Popular".
   final String? badge;
+
+  /// Color de la insignia; por defecto [activeColor].
+  final Color? badgeColor;
   final bool selected;
   final VoidCallback? onTap;
 
@@ -69,9 +77,10 @@ class SelectionTile extends StatelessWidget {
             ),
             child: Row(
               children: [
-                if (icon != null) ...[
+                if (icon != null || emoji != null) ...[
                   _IconBox(
-                    icon: icon!,
+                    icon: icon,
+                    emoji: emoji,
                     selected: selected,
                     color: activeColor,
                     shadow: activeShadow,
@@ -92,7 +101,7 @@ class SelectionTile extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
-                                color: activeColor,
+                                color: badgeColor ?? activeColor,
                                 borderRadius: AppRadius.pill,
                               ),
                               child: Text(
@@ -122,12 +131,14 @@ class SelectionTile extends StatelessWidget {
 class _IconBox extends StatelessWidget {
   const _IconBox({
     required this.icon,
+    required this.emoji,
     required this.selected,
     required this.color,
     required this.shadow,
   });
 
-  final IconData icon;
+  final IconData? icon;
+  final String? emoji;
   final bool selected;
   final Color color;
   final Color shadow;
@@ -143,11 +154,14 @@ class _IconBox extends StatelessWidget {
         borderRadius: AppRadius.inner,
         boxShadow: selected ? chunkyShadow(shadow, 3) : null,
       ),
-      child: Icon(
-        icon,
-        size: 24,
-        color: selected ? Colors.white : AppColors.onSurfaceVariant,
-      ),
+      alignment: Alignment.center,
+      child: emoji != null
+          ? Text(emoji!, style: const TextStyle(fontSize: 24))
+          : Icon(
+              icon,
+              size: 24,
+              color: selected ? Colors.white : AppColors.onSurfaceVariant,
+            ),
     );
   }
 }

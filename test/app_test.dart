@@ -50,7 +50,13 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(charadesCta);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Empezar partida'));
+    // CTA real de la configuración de Charadas (al final de la lista).
+    final startCta = find.text('¡Empezar a actuar!');
+    await tester.scrollUntilVisible(startCta, 300,
+        scrollable: find.byType(Scrollable).first);
+    await tester.ensureVisible(startCta);
+    await tester.pumpAndSettle();
+    await tester.tap(startCta);
     await tester.pumpAndSettle();
 
     expect(find.text('Partida en vivo'), findsOneWidget);

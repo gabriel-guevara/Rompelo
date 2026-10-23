@@ -26,7 +26,7 @@ los juegos funcionan como maquetas navegables con datos de ejemplo.
 | 0 | Mockup en el repo, plan y documentación | ✅ |
 | 1 | Entorno Flutter + fundaciones (tema, router, widgets core) | ✅ |
 | 2 | Home / Explorar | ✅ |
-| 3 | Pantallas de configuración | ⏳ |
+| 3 | Pantallas de configuración | ✅ |
 | 4 | Pantallas en partida | ⏳ |
 | 5 | Resultados / podio + tabs | ⏳ |
 | 6 | Tests, pulido y README final | ⏳ |
@@ -47,9 +47,25 @@ El mockup se hizo en Google Stitch y está exportado en [`design/stitch/`](desig
 |---|---|---|
 | Flutter / Dart | 3.47 (stable) / 3.13 | UI nativa |
 | `go_router` | ^17.5.0 | Navegación declarativa con barra inferior (`StatefulShellRoute.indexedStack`) |
-| `flutter_riverpod` | ^3.4.3 | Estado (router como provider, número de jugadores; configuración de partida desde la Fase 3) |
+| `flutter_riverpod` | ^3.4.3 | Estado (router, número de jugadores y configuración de cada partida) |
 | Fuente Outfit (TTF variable) | `assets/fonts/` | Tipografía empaquetada, funciona offline |
 | `flutter_lints` | ^6.0.0 | Reglas de estilo para `flutter analyze` |
+
+## Novedades de la Fase 3
+- **Pantallas de configuración reales** para Charadas, Trivia e Impostor (`features/setup/presentation/`),
+  fieles a `design/stitch/config_*`. Cada CTA ("¡Empezar a actuar!", "¡Calentar pulsadores y jugar!",
+  "Repartir identidades secretas") lleva a `/partida/<juego>`. Se eliminó el placeholder de configuración.
+- **Modelo inmutable `MatchSetup`** (`domain/match_setup.dart`): `sealed class` con `CharadesSetup`,
+  `TriviaSetup` e `ImpostorSetup` (`copyWith`, rangos de jugadores del catálogo, mínimo de mazos, regla de
+  2 impostores desde 6 jugadores).
+- **Providers** (`providers/match_setup_provider.dart`): un `Notifier` por juego con valores por defecto
+  listos para jugar (flujo ≤ 3 toques) que siguen al selector de jugadores del home con `ref.listen`, y
+  `matchSetupProvider(gameId)` para leer cualquier configuración desde la partida o los resultados.
+- **Widgets compartidos** (`features/setup/widgets/`): `ConfigScaffold`, `GameConfigHero`, `ConfigSection`,
+  `RuleRow`, `RuleSwitch`, `OptionLabel`, `CountBadge`, `DeckList` y `PlayerNamesEditor` (chips "👑 P1 Mateo"
+  que se renombran con un diálogo: RF "ingresar nombres"). `SelectionTile` acepta emoji y color de badge.
+- **Tests:** dominio, providers (jugadores, mazos, impostores, nombres) y pantallas (CTA → partida, controles
+  que cambian el estado, renombrar jugador).
 
 ## Novedades de la Fase 2
 - **Home real** (`features/catalog/presentation/home_screen.dart`) fiel a `design/stitch/home`: header con
@@ -89,6 +105,7 @@ lib/
   core/router/             rutas (AppRoutes) y GoRouter con el shell de tabs
   core/widgets/            componentes del sistema de diseño
   features/<feature>/      catalog · setup · games · results · settings
+                           (cada una con domain/ data/ providers/ presentation/ widgets/ según necesite)
 assets/fonts/              Outfit (variable) + licencia OFL
 design/stitch/             mockup exportado + DESIGN.md
 docs/                      plan maestro, fichas de fase y progreso
