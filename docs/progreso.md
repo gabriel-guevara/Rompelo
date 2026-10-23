@@ -6,7 +6,7 @@
 | Fase | Estado | Commit | Notas |
 |---|---|---|---|
 | 0 — Plan y documentación | ✅ Hecha | *(ver `git log`)* | Mockup en `design/stitch/`, plan, fichas, README base |
-| 1 — Entorno y fundaciones | ✅ Hecha | `COMMIT_F1` | Tema, router con 4 tabs, widgets core, catálogo, tests |
+| 1 — Entorno y fundaciones | ✅ Hecha | `da737ad` | Tema, router con 4 tabs, widgets core, catálogo, tests |
 | 2 — Home / Explorar | ⏳ Pendiente | | |
 | 3 — Configuraciones | ⏳ Pendiente | | |
 | 4 — Pantallas en partida | ⏳ Pendiente | | |
