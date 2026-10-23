@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-tertiary-container": "#4c483c", "tertiary-fixed-dim": "#cdc6b6", "surface-container-lowest": "#ffffff", "surface-tint": "#3b608c", "on-surface": "#1d192c", "surface-variant": "#e7dff9", "surface": "#fdf7ff", "on-background": "#1d192c", "tertiary-container": "#beb7a8", "outline-variant": "#c3c6d0", "on-secondary-fixed-variant": "#920400", "on-tertiary-fixed-variant": "#4b473a", "secondary-container": "#fd5842", "on-primary-fixed-variant": "#204873", "on-error-container": "#93000a", "tertiary": "#635e51", "on-primary": "#ffffff", "primary-fixed-dim": "#a4c9fb", "secondary-fixed": "#ffdad4", "on-tertiary": "#ffffff", "inverse-primary": "#a4c9fb", "on-surface-variant": "#42474e", "surface-container-highest": "#e7dff9", "surface-bright": "#fdf7ff", "on-tertiary-fixed": "#1e1b11", "surface-container": "#f2ebff", "tertiary-fixed": "#e9e2d1", "error-container": "#ffdad6", "secondary-fixed-dim": "#ffb4a8", "outline": "#73777f", "primary-container": "#95baeb", "on-primary-fixed": "#001c37", "inverse-surface": "#322e42", "on-secondary-container": "#5b0200", "surface-container-low": "#f7f1ff", "inverse-on-surface": "#f5eeff", "error": "#ba1a1a", "surface-dim": "#ded6f1", "surface-container-high": "#ece4ff", "on-secondary-fixed": "#410100", "primary-fixed": "#d2e4ff", "primary": "#3b608c", "on-error": "#ffffff", "secondary": "#b62416", "background": "#fdf7ff", "on-primary-container": "#224a75", "on-secondary": "#ffffff" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": { "space-sm": "0.75rem", "space-md": "1rem", "space-lg": "1.5rem", "margin": "1.25rem", "space-xl": "2.25rem", "gutter": "1rem", "space-xs": "0.375rem" }, "fontFamily": { "label-md": ["Outfit"], "body-md": ["Outfit"], "label-sm": ["Outfit"], "headline-sm": ["Outfit"], "headline-md": ["Outfit"], "body-sm": ["Outfit"], "headline-lg": ["Outfit"], "body-lg": ["Outfit"], "headline-xl": ["Outfit"], "headline-xl-mobile": ["Outfit"], "label-lg": ["Outfit"] }, "fontSize": { "label-md": ["14px", { "lineHeight": "18px", "fontWeight": "600" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }], "headline-sm": ["19px", { "lineHeight": "25px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "500" }], "headline-xl": ["40px", { "lineHeight": "46px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "headline-xl-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "800" }], "label-lg": ["16px", { "lineHeight": "22px", "fontWeight": "700" }] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-xs"><div class="flex items-center gap-1"><span class="font-headline-md text-headline-md tracking-tight text-on-surface font-extrabold">Rómpelo</span><span class="material-symbols-outlined text-secondary text-[20px]">auto_awesome</span></div><span class="sr-only">Configurar</span></div><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-28 px-margin bg-surface flex-grow"><div class="flex flex-col w-full max-w-[540px] mx-auto gap-space-lg pb-space-xl">
+<!-- Game Hero Summary Card -->
+<div class="relative bg-surface-container-low rounded-3xl p-space-lg shadow-sm overflow-hidden flex flex-col gap-space-sm">
+<div class="flex items-center justify-between gap-space-xs">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm shadow-[0_2px_0_0_#6f97ce]">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">theater_comedy</span>
+<span>Misterio &amp; deducción</span>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm px-2.5 py-1 rounded-full bg-surface text-primary font-bold">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+        Sala viva
+      </span>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight font-extrabold">
+        El impostor silencioso
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 leading-relaxed">
+        Todos conocen la palabra secreta salvo uno. Descubre al farsante antes de que copie tu pista.
+      </p>
+</div>
+<!-- Micro party avatar sneak peek -->
+<div class="flex items-center gap-2 pt-1">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center text-sm shadow-sm ring-2 ring-surface">👑</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center text-sm shadow-sm ring-2 ring-surface">🐱</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center text-sm shadow-sm ring-2 ring-surface">🍕</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center text-sm shadow-sm ring-2 ring-surface">🚀</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">+4 listos en el sofá</span>
+</div>
+</div>
+<!-- Player Counter Section -->
+<section class="bg-surface-container-lowest rounded-3xl p-space-lg shadow-[0_4px_0_0_rgba(31,27,46,0.06)] flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Jugadores en ronda</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pasa el móvil en círculo físico</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[28px]">groups</span>
+</div>
+<!-- Stepper Control -->
+<div class="flex items-center justify-between bg-surface-container-low rounded-2xl p-2 gap-space-sm">
+<button aria-label="Reducir jugadores" class="w-14 h-14 rounded-2xl bg-surface-container-lowest text-on-surface flex items-center justify-center shadow-[0_4px_0_0_rgba(31,27,46,0.12)] active:translate-y-1 active:shadow-none transition-all" id="btn-player-minus" type="button">
+<span class="material-symbols-outlined text-[26px]">remove</span>
+</button>
+<div class="flex flex-col items-center">
+<span class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface font-extrabold tracking-tight" id="player-count-display">8</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold -mt-1">Jugadores</span>
+</div>
+<button aria-label="Aumentar jugadores" class="w-14 h-14 rounded-2xl bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0_4px_0_0_#6f97ce] active:translate-y-1 active:shadow-none transition-all" id="btn-player-plus" type="button">
+<span class="material-symbols-outlined text-[26px] font-bold">add</span>
+</button>
+</div>
+<!-- Dynamic Player Badge Carousel -->
+<div class="flex items-center gap-2.5 overflow-x-auto py-1 scrollbar-none" id="avatar-shelf">
+<div class="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface-container text-on-surface shadow-sm">
+<span class="text-xl">👑</span>
+<span class="font-label-sm text-label-sm font-bold">P1 Mateo</span>
+</div>
+<div class="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface-container text-on-surface shadow-sm">
+<span class="text-xl">🐱</span>
+<span class="font-label-sm text-label-sm font-bold">P2 Clara</span>
+</div>
+<div class="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface-container text-on-surface shadow-sm">
+<span class="text-xl">🍕</span>
+<span class="font-label-sm text-label-sm font-bold">P3 David</span>
+</div>
+<div class="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface-container text-on-surface shadow-sm">
+<span class="text-xl">🚀</span>
+<span class="font-label-sm text-label-sm font-bold">P4 Sofi</span>
+</div>
+<div class="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface-container text-on-surface shadow-sm">
+<span class="text-xl">🥑</span>
+<span class="font-label-sm text-label-sm font-bold">P5 Lucas</span>
+</div>
+<div class="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface-container text-on-surface shadow-sm">
+<span class="text-xl">👾</span>
+<span class="font-label-sm text-label-sm font-bold">P6 Ana</span>
+</div>
+<div class="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface-container text-on-surface shadow-sm">
+<span class="text-xl">🦊</span>
+<span class="font-label-sm text-label-sm font-bold">P7 Nico</span>
+</div>
+<div class="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface-container text-on-surface shadow-sm">
+<span class="text-xl">⚡</span>
+<span class="font-label-sm text-label-sm font-bold">P8 Val</span>
+</div>
+</div>
+</section>
+<!-- Number of Impostors Chunky Toggle -->
+<section class="bg-surface-container-lowest rounded-3xl p-space-lg shadow-[0_4px_0_0_rgba(31,27,46,0.06)] flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">¿Cuántos impostores?</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Intriga simple o conspiración doble</p>
+</div>
+<span class="material-symbols-outlined text-secondary text-[26px]">visibility_off</span>
+</div>
+<div class="grid grid-cols-2 gap-space-sm mt-1">
+<button class="impostor-selector-btn py-3.5 px-4 rounded-2xl bg-primary-container text-on-primary-container font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-[0_4px_0_0_#6f97ce] transition-transform active:translate-y-1" id="pill-imp-1" type="button">
+<span class="material-symbols-outlined text-[20px]">person_alert</span>
+<span>1 Impostor</span>
+</button>
+<button class="impostor-selector-btn py-3.5 px-4 rounded-2xl bg-surface-container-low text-on-surface-variant font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-[0_4px_0_0_rgba(31,27,46,0.08)] transition-transform active:translate-y-1" id="pill-imp-2" type="button">
+<span class="material-symbols-outlined text-[20px]">group_remove</span>
+<span>2 Impostores</span>
+</button>
+</div>
+</section>
+<!-- Secret Word Categories -->
+<section class="bg-surface-container-lowest rounded-3xl p-space-lg shadow-[0_4px_0_0_rgba(31,27,46,0.06)] flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Mazos de palabras</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Selecciona uno o combina varios paquetes</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[26px]">category</span>
+</div>
+<div class="flex flex-col gap-2.5">
+<!-- Category 1 (Active) -->
+<button class="deck-option w-full p-4 rounded-2xl bg-surface-container text-left flex items-center justify-between shadow-[0_3px_0_0_rgba(31,27,46,0.07)] active:translate-y-0.5 transition-all" data-selected="true" type="button">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center text-xl shadow-sm">
+            🍔
+          </div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Comida &amp; antojos de fiesta</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tacos, fondue, sushi y snacks</span>
+</div>
+</div>
+<div class="deck-check w-7 h-7 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0_2px_0_0_#6f97ce]">
+<span class="material-symbols-outlined text-[18px] font-bold">check</span>
+</div>
+</button>
+<!-- Category 2 (Active) -->
+<button class="deck-option w-full p-4 rounded-2xl bg-surface-container text-left flex items-center justify-between shadow-[0_3px_0_0_rgba(31,27,46,0.07)] active:translate-y-0.5 transition-all" data-selected="true" type="button">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center text-xl shadow-sm">
+            🛋️
+          </div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Objetos cotidianos raros</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Quitapelusas, sacacorchos, pantufla</span>
+</div>
+</div>
+<div class="deck-check w-7 h-7 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0_2px_0_0_#6f97ce]">
+<span class="material-symbols-outlined text-[18px] font-bold">check</span>
+</div>
+</button>
+<!-- Category 3 (Inactive) -->
+<button class="deck-option w-full p-4 rounded-2xl bg-surface-container-low text-left flex items-center justify-between shadow-[0_3px_0_0_rgba(31,27,46,0.04)] opacity-85 active:translate-y-0.5 transition-all" data-selected="false" type="button">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-xl bg-surface text-on-surface-variant flex items-center justify-center text-xl">
+            ✈️
+          </div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Lugares del mundo y viajes</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Aeropuertos, ruinas y playas secretas</span>
+</div>
+</div>
+<div class="deck-check w-7 h-7 rounded-full bg-surface-container-highest text-transparent flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] font-bold">check</span>
+</div>
+</button>
+<!-- Category 4 (Modo Picante) -->
+<button class="deck-option w-full p-4 rounded-2xl bg-secondary-fixed/50 text-left flex items-center justify-between shadow-[0_3px_0_0_rgba(182,36,22,0.15)] active:translate-y-0.5 transition-all" data-selected="false" type="button">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-xl bg-secondary text-on-secondary flex items-center justify-center text-xl shadow-sm">
+            🌶️
+          </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-on-secondary-fixed font-bold">Modo picante</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm">+18</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-secondary-fixed-variant">Citas incómodas, confesiones y secretos</span>
+</div>
+</div>
+<div class="deck-check w-7 h-7 rounded-full bg-surface-container-highest text-transparent flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] font-bold">check</span>
+</div>
+</button>
+</div>
+</section>
+<!-- Special Gameplay & Round Rules -->
+<section class="bg-surface-container-lowest rounded-3xl p-space-lg shadow-[0_4px_0_0_rgba(31,27,46,0.06)] flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Dinámica de pase &amp; debate</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ajustes para tensión máxima</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[26px]">tune</span>
+</div>
+<!-- Toggle 1: Blind Turn Pass -->
+<div class="flex items-center justify-between p-3.5 rounded-2xl bg-surface-container-low gap-3">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[24px] mt-0.5">vibration</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Turno a ciegas háptico</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Pasa el móvil con pantalla en reposo y vibración segura</span>
+</div>
+</div>
+<button aria-checked="true" class="relative inline-flex h-8 w-14 flex-shrink-0 cursor-pointer rounded-full bg-primary-container p-1 shadow-inner transition-colors duration-200 ease-in-out" id="toggle-blind" role="switch" type="button">
+<span class="translate-x-6 pointer-events-none inline-block h-6 w-6 transform rounded-full bg-on-primary shadow-sm transition duration-200 ease-in-out" id="knob-blind"></span>
+</button>
+</div>
+<!-- Toggle 2: Subtle Clue for Impostor -->
+<div class="flex items-center justify-between p-3.5 rounded-2xl bg-surface-container-low gap-3">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-on-surface-variant text-[24px] mt-0.5">psychology_alt</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Pista sutil para el impostor</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Da una temática general para que no se sienta tan perdido</span>
+</div>
+</div>
+<button aria-checked="false" class="relative inline-flex h-8 w-14 flex-shrink-0 cursor-pointer rounded-full bg-surface-container-highest p-1 shadow-inner transition-colors duration-200 ease-in-out" id="toggle-clue" role="switch" type="button">
+<span class="translate-x-0 pointer-events-none inline-block h-6 w-6 transform rounded-full bg-surface shadow-sm transition duration-200 ease-in-out" id="knob-clue"></span>
+</button>
+</div>
+<!-- Debate Timer Segmented Pills -->
+<div class="flex flex-col gap-2 pt-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-bold">Tiempo de debate y acusación</span>
+<span class="font-label-sm text-label-sm text-primary font-extrabold px-2 py-0.5 rounded-full bg-primary-container" id="timer-indicator">3 minutos</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<button class="timer-pill py-2.5 rounded-2xl bg-surface-container-low text-on-surface-variant font-label-md text-label-md font-bold shadow-[0_2px_0_0_rgba(31,27,46,0.06)] active:translate-y-0.5 transition-all" data-minutes="2" type="button">
+          2 min
+        </button>
+<button class="timer-pill py-2.5 rounded-2xl bg-primary-container text-on-primary-container font-label-md text-label-md font-bold shadow-[0_3px_0_0_#6f97ce] active:translate-y-0.5 transition-all" data-minutes="3" type="button">
+          3 min
+        </button>
+<button class="timer-pill py-2.5 rounded-2xl bg-surface-container-low text-on-surface-variant font-label-md text-label-md font-bold shadow-[0_2px_0_0_rgba(31,27,46,0.06)] active:translate-y-0.5 transition-all" data-minutes="5" type="button">
+          5 min
+        </button>
+</div>
+</div>
+</section>
+<!-- Giant Chunky Tactile Call to Action -->
+<div class="sticky bottom-2 z-10 pt-2">
+<button class="w-full min-h-[62px] px-6 py-4 rounded-full bg-primary-container text-on-primary-container font-label-lg text-label-lg font-extrabold tracking-wide flex items-center justify-center gap-3 shadow-[0_6px_0_0_#6f97ce] hover:shadow-[0_4px_0_0_#6f97ce] active:translate-y-1.5 active:shadow-[0_1px_0_0_#6f97ce] transition-all" id="start-game-cta" type="button">
+<span class="material-symbols-outlined text-[24px]">key</span>
+<span>Repartir identidades secretas</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<p class="text-center font-body-sm text-body-sm text-on-surface-variant mt-2">
+      Coloca el teléfono en el centro tras mirar tu rol
+    </p>
+</div>
+</div>
+<script>
+  (function () {
+    // Stepper logic
+    let players = 8;
+    const minPlayers = 4;
+    const maxPlayers = 16;
+    const countDisplay = document.getElementById('player-count-display');
+    const btnMinus = document.getElementById('btn-player-minus');
+    const btnPlus = document.getElementById('btn-player-plus');
+
+    function updateStepper() {
+      countDisplay.textContent = players;
+      btnMinus.disabled = players <= minPlayers;
+      btnPlus.disabled = players >= maxPlayers;
+      btnMinus.classList.toggle('opacity-40', players <= minPlayers);
+      btnPlus.classList.toggle('opacity-40', players >= maxPlayers);
+    }
+
+    btnMinus.addEventListener('click', () => {
+      if (players > minPlayers) {
+        players--;
+        updateStepper();
+      }
+    });
+
+    btnPlus.addEventListener('click', () => {
+      if (players < maxPlayers) {
+        players++;
+        updateStepper();
+      }
+    });
+
+    // Impostor Segmented Selector
+    const imp1 = document.getElementById('pill-imp-1');
+    const imp2 = document.getElementById('pill-imp-2');
+
+    imp1.addEventListener('click', () => {
+      imp1.className = 'impostor-selector-btn py-3.5 px-4 rounded-2xl bg-primary-container text-on-primary-container font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-[0_4px_0_0_#6f97ce] transition-transform active:translate-y-1';
+      imp2.className = 'impostor-selector-btn py-3.5 px-4 rounded-2xl bg-surface-container-low text-on-surface-variant font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-[0_4px_0_0_rgba(31,27,46,0.08)] transition-transform active:translate-y-1';
+    });
+
+    imp2.addEventListener('click', () => {
+      imp2.className = 'impostor-selector-btn py-3.5 px-4 rounded-2xl bg-primary-container text-on-primary-container font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-[0_4px_0_0_#6f97ce] transition-transform active:translate-y-1';
+      imp1.className = 'impostor-selector-btn py-3.5 px-4 rounded-2xl bg-surface-container-low text-on-surface-variant font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-[0_4px_0_0_rgba(31,27,46,0.08)] transition-transform active:translate-y-1';
+    });
+
+    // Deck toggle cards
+    document.querySelectorAll('.deck-option').forEach(card => {
+      card.addEventListener('click', () => {
+        const isSelected = card.getAttribute('data-selected') === 'true';
+        const checkEl = card.querySelector('.deck-check');
+
+        if (isSelected) {
+          card.setAttribute('data-selected', 'false');
+          card.classList.replace('bg-surface-container', 'bg-surface-container-low');
+          card.classList.add('opacity-85');
+          checkEl.className = 'deck-check w-7 h-7 rounded-full bg-surface-container-highest text-transparent flex items-center justify-center';
+        } else {
+          card.setAttribute('data-selected', 'true');
+          card.classList.replace('bg-surface-container-low', 'bg-surface-container');
+          card.classList.remove('opacity-85');
+          checkEl.className = 'deck-check w-7 h-7 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0_2px_0_0_#6f97ce]';
+        }
+      });
+    });
+
+    // Switch Toggles
+    function setupToggle(btnId, knobId, initialActive) {
+      const btn = document.getElementById(btnId);
+      const knob = document.getElementById(knobId);
+      let active = initialActive;
+
+      btn.addEventListener('click', () => {
+        active = !active;
+        btn.setAttribute('aria-checked', active.toString());
+        if (active) {
+          btn.classList.replace('bg-surface-container-highest', 'bg-primary-container');
+          knob.classList.replace('translate-x-0', 'translate-x-6');
+          knob.classList.replace('bg-surface', 'bg-on-primary');
+        } else {
+          btn.classList.replace('bg-primary-container', 'bg-surface-container-highest');
+          knob.classList.replace('translate-x-6', 'translate-x-0');
+          knob.classList.replace('bg-on-primary', 'bg-surface');
+        }
+      });
+    }
+
+    setupToggle('toggle-blind', 'knob-blind', true);
+    setupToggle('toggle-clue', 'knob-clue', false);
+
+    // Timer Pills
+    const timerIndicator = document.getElementById('timer-indicator');
+    const timerPills = document.querySelectorAll('.timer-pill');
+
+    timerPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        timerPills.forEach(p => {
+          p.className = 'timer-pill py-2.5 rounded-2xl bg-surface-container-low text-on-surface-variant font-label-md text-label-md font-bold shadow-[0_2px_0_0_rgba(31,27,46,0.06)] active:translate-y-0.5 transition-all';
+        });
+        pill.className = 'timer-pill py-2.5 rounded-2xl bg-primary-container text-on-primary-container font-label-md text-label-md font-bold shadow-[0_3px_0_0_#6f97ce] active:translate-y-0.5 transition-all';
+        const mins = pill.getAttribute('data-minutes');
+        timerIndicator.textContent = mins + ' minutos';
+      });
+    });
+
+    // CTA press feedback & simulated haptic pop
+    const cta = document.getElementById('start-game-cta');
+    cta.addEventListener('click', () => {
+      if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate([20, 30, 40]);
+      }
+      cta.classList.add('scale-95');
+      setTimeout(() => {
+        cta.classList.remove('scale-95');
+      }, 150);
+    });
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.05)]" data-active-classes="bg-primary-container text-on-primary-container shadow-[0_3px_0_0_#6f97ce]"><div class="flex justify-around items-center h-20 px-space-sm max-w-[540px] mx-auto"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[50px] px-space-xs py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all" data-path="explorar" href="#"><span class="material-symbols-outlined text-[24px]">sports_esports</span><span class="font-label-sm text-label-sm mt-0.5">Explorar</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[50px] px-space-xs py-1 rounded-full transition-all bg-primary-container text-on-primary-container shadow-[0_3px_0_0_#6f97ce]" data-path="configurar" href="#"><span class="material-symbols-outlined text-[24px]">tune</span><span class="font-label-sm text-label-sm mt-0.5">Configurar</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[50px] px-space-xs py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all" data-path="marcador" href="#"><span class="material-symbols-outlined text-[24px]">trophy</span><span class="font-label-sm text-label-sm mt-0.5">Marcador</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[50px] px-space-xs py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all" data-path="ajustes" href="#"><span class="material-symbols-outlined text-[24px]">settings</span><span class="font-label-sm text-label-sm mt-0.5">Ajustes</span></a></div></nav></body></html>

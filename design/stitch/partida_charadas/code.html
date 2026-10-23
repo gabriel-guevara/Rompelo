@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-tertiary-container": "#4c483c", "tertiary-fixed-dim": "#cdc6b6", "surface-container-lowest": "#ffffff", "surface-tint": "#3b608c", "on-surface": "#1d192c", "surface-variant": "#e7dff9", "surface": "#fdf7ff", "on-background": "#1d192c", "tertiary-container": "#beb7a8", "outline-variant": "#c3c6d0", "on-secondary-fixed-variant": "#920400", "on-tertiary-fixed-variant": "#4b473a", "secondary-container": "#fd5842", "on-primary-fixed-variant": "#204873", "on-error-container": "#93000a", "tertiary": "#635e51", "on-primary": "#ffffff", "primary-fixed-dim": "#a4c9fb", "secondary-fixed": "#ffdad4", "on-tertiary": "#ffffff", "inverse-primary": "#a4c9fb", "on-surface-variant": "#42474e", "surface-container-highest": "#e7dff9", "surface-bright": "#fdf7ff", "on-tertiary-fixed": "#1e1b11", "surface-container": "#f2ebff", "tertiary-fixed": "#e9e2d1", "error-container": "#ffdad6", "secondary-fixed-dim": "#ffb4a8", "outline": "#73777f", "primary-container": "#95baeb", "on-primary-fixed": "#001c37", "inverse-surface": "#322e42", "on-secondary-container": "#5b0200", "surface-container-low": "#f7f1ff", "inverse-on-surface": "#f5eeff", "error": "#ba1a1a", "surface-dim": "#ded6f1", "surface-container-high": "#ece4ff", "on-secondary-fixed": "#410100", "primary-fixed": "#d2e4ff", "primary": "#3b608c", "on-error": "#ffffff", "secondary": "#b62416", "background": "#fdf7ff", "on-primary-container": "#224a75", "on-secondary": "#ffffff" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": { "space-sm": "0.75rem", "space-md": "1rem", "space-lg": "1.5rem", "margin": "1.25rem", "space-xl": "2.25rem", "gutter": "1rem", "space-xs": "0.375rem" }, "fontFamily": { "label-md": ["Outfit"], "body-md": ["Outfit"], "label-sm": ["Outfit"], "headline-sm": ["Outfit"], "headline-md": ["Outfit"], "body-sm": ["Outfit"], "headline-lg": ["Outfit"], "body-lg": ["Outfit"], "headline-xl": ["Outfit"], "headline-xl-mobile": ["Outfit"], "label-lg": ["Outfit"] }, "fontSize": { "label-md": ["14px", { "lineHeight": "18px", "fontWeight": "600" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }], "headline-sm": ["19px", { "lineHeight": "25px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "500" }], "headline-xl": ["40px", { "lineHeight": "46px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "headline-xl-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "800" }], "label-lg": ["16px", { "lineHeight": "22px", "fontWeight": "700" }] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between"><button class="min-h-[44px] min-w-[44px] px-space-sm py-1.5 rounded-full bg-surface-container flex items-center justify-center gap-1 text-on-surface active:translate-y-0.5 shadow-[0_2px_0_0_rgba(31,27,46,0.12)]" onclick="history.back()"><span class="material-symbols-outlined text-[20px]">close</span><span class="font-label-sm text-label-sm">Salir</span></button><div class="flex items-center gap-space-xs"><div class="px-space-md py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center gap-1 shadow-[0_2px_0_0_#ffb4a8]"><span class="material-symbols-outlined text-[18px] text-secondary">timer</span><span class="font-label-md text-label-md font-bold">Partida En Vivo</span></div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe px-margin bg-surface flex-grow"><div class="flex flex-col w-full pb-6 max-w-[540px] mx-auto select-none">
+<!-- Status & Score Ribbon -->
+<div class="flex items-center justify-between gap-space-xs bg-surface-container-low px-space-md py-space-sm rounded-lg shadow-sm mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<div class="w-3 h-3 rounded-full bg-secondary animate-ping"></div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Ronda 2/3</span>
+</div>
+<!-- Matchup Scores -->
+<div class="flex items-center gap-space-xs">
+<div class="flex items-center gap-1 bg-surface-container-highest px-space-sm py-0.5 rounded-full">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Vino: <strong class="text-secondary font-bold" id="score-vino">4</strong></span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">vs</span>
+<div class="flex items-center gap-1 bg-surface-container-highest px-space-sm py-0.5 rounded-full">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Burbujas: <strong class="text-primary font-bold" id="score-bubbles">3</strong></span>
+</div>
+</div>
+<!-- Pause Button -->
+<button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface active:translate-y-0.5 shadow-[0_2px_0_0_rgba(31,27,46,0.12)]" id="btn-pause">
+<span class="material-symbols-outlined text-[18px]">pause</span>
+</button>
+</div>
+<!-- Chunky Timer Bar -->
+<div class="bg-surface-container px-space-md py-2.5 rounded-lg flex items-center gap-space-sm shadow-sm mb-space-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shrink-0 shadow-[0_3px_0_0_#ffb4a8]">
+<span class="material-symbols-outlined text-[20px] text-secondary">alarm</span>
+</div>
+<div class="flex-grow flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-outline-variant uppercase tracking-wider">Tiempo restante</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-bold tabular-nums" id="timer-display">0:38</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden p-0.5">
+<div class="h-full rounded-full bg-secondary transition-all duration-300" id="timer-bar" style="width: 63%;"></div>
+</div>
+</div>
+</div>
+<!-- Giant Card Container for Guessing -->
+<div class="relative bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_8px_0_0_rgba(31,27,46,0.08)] flex flex-col justify-between items-center text-center my-space-xs min-h-[300px] transition-transform duration-200" id="game-card">
+<!-- Category & Difficulty Pills -->
+<div class="flex flex-wrap items-center justify-center gap-space-xs w-full">
+<span class="px-space-md py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">movie</span>
+<span id="card-category">Cine &amp; Drama romántico</span>
+</span>
+<span class="px-space-sm py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">local_fire_department</span>
+<span id="card-points">1 punto • Media</span>
+</span>
+</div>
+<!-- Word Prompt / Centerpiece -->
+<div class="flex flex-col items-center justify-center py-space-md my-auto w-full">
+<div class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center mb-space-sm text-primary">
+<span class="material-symbols-outlined text-[36px]" id="card-icon">sailing</span>
+</div>
+<h2 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface font-extrabold tracking-tight px-space-xs" id="card-title">
+        Titanic
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant font-medium mt-1" id="card-subtitle">
+        (Escena del barco con los brazos abiertos)
+      </p>
+</div>
+<!-- Gyro Gesture Indicators -->
+<div class="w-full bg-surface-container-low rounded-lg p-space-sm flex items-center justify-around gap-2">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+</div>
+<span class="font-label-sm text-label-sm">Arriba: <strong>Pasar</strong></span>
+</div>
+<div class="w-px h-5 bg-surface-container-highest"></div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[16px]">arrow_downward</span>
+</div>
+<span class="font-label-sm text-label-sm">Abajo: <strong>Acierto</strong></span>
+</div>
+</div>
+</div>
+<!-- Giant Chunky Touch Backups (Single Hand or Table Tap) -->
+<div class="grid grid-cols-2 gap-space-sm mt-space-sm">
+<!-- Pass Word Button -->
+<button class="min-h-[64px] rounded-lg bg-surface-container-high text-on-surface flex flex-col items-center justify-center p-space-sm shadow-[0_5px_0_0_rgba(31,27,46,0.18)] active:translate-y-1 active:shadow-[0_1px_0_0_rgba(31,27,46,0.18)] transition-all" id="btn-pass">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[20px] text-secondary">skip_next</span>
+<span class="font-label-lg text-label-lg font-bold">Pasar</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline-variant">Siguiente carta</span>
+</button>
+<!-- Correct / Hit Button -->
+<button class="min-h-[64px] rounded-lg bg-secondary text-on-secondary flex flex-col items-center justify-center p-space-sm shadow-[0_6px_0_0_#5c0200] active:translate-y-1 active:shadow-[0_1px_0_0_#5c0200] transition-all" id="btn-correct">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-lg text-label-lg font-bold">¡Acierto!</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary-fixed">+1 punto</span>
+</button>
+</div>
+<!-- Quick Feedback Pop Toast Notification -->
+<div class="opacity-0 pointer-events-none fixed inset-x-0 bottom-24 flex justify-center z-40 transition-all duration-300 transform translate-y-3" id="action-toast">
+<div class="bg-inverse-surface text-inverse-on-surface px-space-lg py-2 rounded-full font-label-md text-label-md flex items-center gap-2 shadow-xl">
+<span class="material-symbols-outlined text-[20px]" id="toast-icon">check</span>
+<span id="toast-text">¡Punto sumado!</span>
+</div>
+</div>
+<!-- Game Pause Modal Overlay (Hidden by Default) -->
+<div class="hidden fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm flex items-center justify-center px-margin" id="pause-modal">
+<div class="bg-surface-container-lowest w-full max-w-[360px] rounded-xl p-space-lg flex flex-col items-center text-center shadow-[0_12px_0_0_rgba(31,27,46,0.18)]">
+<div class="w-14 h-14 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface mb-space-md">
+<span class="material-symbols-outlined text-[32px]">pause_circle</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Partida en Pausa</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg">
+        Tómate un respiro o acomoda el teléfono en la frente para continuar la diversión.
+      </p>
+<button class="w-full min-h-[52px] rounded-full bg-secondary text-on-secondary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-[0_5px_0_0_#5c0200] active:translate-y-1 active:shadow-[0_1px_0_0_#5c0200] mb-space-xs" id="btn-resume">
+<span class="material-symbols-outlined text-[20px]">play_arrow</span>
+<span>Reanudar ronda</span>
+</button>
+<button class="w-full min-h-[44px] rounded-full bg-transparent text-secondary font-label-md text-label-md font-semibold flex items-center justify-center" id="btn-quit">
+        Terminar turno
+      </button>
+</div>
+</div>
+</div>
+<script>
+  (function () {
+    const cardData = [
+      {
+        title: "Titanic",
+        subtitle: "(Escena del barco con los brazos abiertos)",
+        category: "Cine & Drama romántico",
+        points: "1 punto • Media",
+        icon: "sailing"
+      },
+      {
+        title: "Darth Vader",
+        subtitle: "('Yo soy tu padre' con voz profunda)",
+        category: "Cine & Ciencia Ficción",
+        points: "1 punto • Fácil",
+        icon: "smart_toy"
+      },
+      {
+        title: "El Rey León",
+        subtitle: "(Alzando a Simba en la roca del rey)",
+        category: "Animación Infantil",
+        points: "1 punto • Media",
+        icon: "pets"
+      },
+      {
+        title: "Spiderman",
+        subtitle: "(Lanzando telarañas y saltando)",
+        category: "Superhéroes",
+        points: "1 punto • Fácil",
+        icon: "accessibility_new"
+      },
+      {
+        title: "La Macarena",
+        subtitle: "(Hacer el baile completo cantando)",
+        category: "Música & Fiesta",
+        points: "2 puntos • Difícil",
+        icon: "music_note"
+      }
+    ];
+
+    let currentIndex = 0;
+    let scoreVino = 4;
+    let secondsLeft = 38;
+    let timerRunning = true;
+
+    const elTitle = document.getElementById('card-title');
+    const elSubtitle = document.getElementById('card-subtitle');
+    const elCategory = document.getElementById('card-category');
+    const elPoints = document.getElementById('card-points');
+    const elIcon = document.getElementById('card-icon');
+    const elCard = document.getElementById('game-card');
+    const elTimerDisplay = document.getElementById('timer-display');
+    const elTimerBar = document.getElementById('timer-bar');
+    const elScoreVino = document.getElementById('score-vino');
+    const elToast = document.getElementById('action-toast');
+    const elToastIcon = document.getElementById('toast-icon');
+    const elToastText = document.getElementById('toast-text');
+    const elPauseModal = document.getElementById('pause-modal');
+    const btnPause = document.getElementById('btn-pause');
+    const btnResume = document.getElementById('btn-resume');
+    const btnQuit = document.getElementById('btn-quit');
+
+    function showToast(msg, isSuccess) {
+      elToastText.textContent = msg;
+      elToastIcon.textContent = isSuccess ? 'check_circle' : 'fast_forward';
+      elToast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+      elToast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        elToast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+        elToast.classList.remove('opacity-100', 'translate-y-0');
+      }, 900);
+    }
+
+    function renderCard(idx) {
+      const item = cardData[idx % cardData.length];
+      elTitle.textContent = item.title;
+      elSubtitle.textContent = item.subtitle;
+      elCategory.textContent = item.category;
+      elPoints.textContent = item.points;
+      elIcon.textContent = item.icon;
+    }
+
+    function flashCard(direction) {
+      const translateY = direction === 'up' ? '-8px' : '8px';
+      elCard.style.transform = `translateY(${translateY})`;
+      setTimeout(() => {
+        elCard.style.transform = 'translateY(0)';
+      }, 180);
+    }
+
+    document.getElementById('btn-correct').addEventListener('click', () => {
+      scoreVino += 1;
+      elScoreVino.textContent = scoreVino;
+      flashCard('down');
+      showToast('¡Acierto! +1 punto para Vino', true);
+      currentIndex++;
+      renderCard(currentIndex);
+    });
+
+    document.getElementById('btn-pass').addEventListener('click', () => {
+      flashCard('up');
+      showToast('Palabra pasada', false);
+      currentIndex++;
+      renderCard(currentIndex);
+    });
+
+    // Pause functionality
+    btnPause.addEventListener('click', () => {
+      timerRunning = false;
+      elPauseModal.classList.remove('hidden');
+    });
+
+    btnResume.addEventListener('click', () => {
+      timerRunning = true;
+      elPauseModal.classList.add('hidden');
+    });
+
+    btnQuit.addEventListener('click', () => {
+      elPauseModal.classList.add('hidden');
+      timerRunning = false;
+      elTimerDisplay.textContent = "0:00";
+      showToast('Fin del turno', false);
+    });
+
+    // Countdown interval
+    setInterval(() => {
+      if (!timerRunning) return;
+      if (secondsLeft > 0) {
+        secondsLeft--;
+        const formatted = `0:${secondsLeft < 10 ? '0' : ''}${secondsLeft}`;
+        elTimerDisplay.textContent = formatted;
+        const pct = Math.max(0, (secondsLeft / 60) * 100);
+        elTimerBar.style.width = pct + '%';
+
+        if (secondsLeft <= 5) {
+          elTimerDisplay.classList.add('animate-pulse');
+        }
+      } else {
+        timerRunning = false;
+        showToast('¡Tiempo agotado!', false);
+      }
+    }, 1000);
+  })();
+</script></main></body></html>
