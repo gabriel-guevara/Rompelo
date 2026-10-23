@@ -7,7 +7,7 @@
 |---|---|---|---|
 | 0 — Plan y documentación | ✅ Hecha | *(ver `git log`)* | Mockup en `design/stitch/`, plan, fichas, README base |
 | 1 — Entorno y fundaciones | ✅ Hecha | `da737ad` | Tema, router con 4 tabs, widgets core, catálogo, tests |
-| 2 — Home / Explorar | ✅ Hecha | *(ver `git log`: "feat: Fase 2")* | Home real, MagicPickerCard, GameCard, filtro por vibra, `playerCountProvider` |
+| 2 — Home / Explorar | ✅ Hecha | `da836d2` | Home real, MagicPickerCard, GameCard, filtro por vibra, `playerCountProvider` |
 | 3 — Configuraciones | ⏳ Pendiente | | |
 | 4 — Pantallas en partida | ⏳ Pendiente | | |
 | 5 — Resultados y tabs | ⏳ Pendiente | | |
