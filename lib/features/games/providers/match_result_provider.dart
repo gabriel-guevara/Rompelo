@@ -1,35 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Puntaje final de un equipo o jugador.
-@immutable
-class ScoreEntry {
-  const ScoreEntry({required this.name, required this.points});
+import '../domain/match_result.dart';
 
-  final String name;
-  final int points;
-}
-
-/// Resultado de la última partida jugada. Lo escribe la pantalla de partida
-/// al terminar y lo leerá el marcador / podio (Fase 5).
-@immutable
-class MatchResult {
-  MatchResult({
-    required this.gameId,
-    required List<ScoreEntry> scores,
-    required this.summary,
-  }) : scores = List.unmodifiable(
-            [...scores]..sort((a, b) => b.points.compareTo(a.points)));
-
-  /// Juego jugado: permite la "revancha" con la misma configuración.
-  final String gameId;
-
-  /// Ordenados de mayor a menor (el primero es el ganador).
-  final List<ScoreEntry> scores;
-
-  /// Frase corta del final ("¡Atraparon al impostor!").
-  final String summary;
-}
+export '../domain/match_result.dart';
 
 /// Guarda el resultado de la última partida (`null` si aún no se jugó).
 class LastMatchResultNotifier extends Notifier<MatchResult?> {
@@ -37,6 +10,9 @@ class LastMatchResultNotifier extends Notifier<MatchResult?> {
   MatchResult? build() => null;
 
   void save(MatchResult result) => state = result;
+
+  /// "Borrar el último marcador" (Ajustes).
+  void clear() => state = null;
 }
 
 final lastMatchResultProvider =

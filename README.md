@@ -28,7 +28,7 @@ los juegos funcionan como maquetas navegables con datos de ejemplo.
 | 2 | Home / Explorar | ✅ |
 | 3 | Pantallas de configuración | ✅ |
 | 4 | Pantallas en partida | ✅ |
-| 5 | Resultados / podio + tabs | ⏳ |
+| 5 | Resultados / podio + tabs | ✅ |
 | 6 | Tests, pulido y README final | ⏳ |
 
 Detalle en [`docs/plan-front.md`](docs/plan-front.md) y avance en [`docs/progreso.md`](docs/progreso.md).
@@ -47,9 +47,29 @@ El mockup se hizo en Google Stitch y está exportado en [`design/stitch/`](desig
 |---|---|---|
 | Flutter / Dart | 3.47 (stable) / 3.13 | UI nativa |
 | `go_router` | ^17.5.0 | Navegación declarativa con barra inferior (`StatefulShellRoute.indexedStack`) |
-| `flutter_riverpod` | ^3.4.3 | Estado (router, número de jugadores, configuración de cada partida y resultado de la última) |
+| `flutter_riverpod` | ^3.4.3 | Estado (router, número de jugadores, configuración de cada partida, resultado de la última y ajustes) |
 | Fuente Outfit (TTF variable) | `assets/fonts/` | Tipografía empaquetada, funciona offline |
 | `flutter_lints` | ^6.0.0 | Reglas de estilo para `flutter analyze` |
+
+## Novedades de la Fase 5
+- **Marcador real** (`features/results/presentation/results_screen.dart`) fiel a `design/stitch/resultados`:
+  badge "Fin del juego", "¡Partida finalizada!" con confeti estático, **podio** 2-1-3 (`widgets/podium.dart`,
+  1.º en vino), tabla del 4.º en adelante, **premios de la noche** (`award_tile.dart`) y **estadísticas**
+  (`stat_tile.dart`: jugadas/duración y puntos repartidos/ventaja). Avisa los empates en la cima.
+- **"¡Jugar revancha inmediata!"** vuelve a `/partida/<juego>` con la misma configuración y **"Volver al catálogo
+  de juegos"** a `/` (RF "repetir o cambiar de juego sin reiniciar"). Sin partidas: estado vacío con CTA al catálogo.
+- **`MatchResult` ampliado** y movido a `features/games/domain/match_result.dart`: `detail`, `plays`/`playsLabel`,
+  `elapsed` y `awards` (`MatchAward` con tono sky/wine/warm). Cada partida registra aciertos, pases, robos y
+  preguntas hechas para calcular sus premios (Máquina de aciertos, Mímica más confusa, Cerebro de la noche,
+  Ladrón de turnos, El mejor farsante / Impostor descubierto, Falsa alarma, Interrogador estrella).
+- **Tab Configurar:** una tarjeta por juego con el resumen de su configuración guardada (`describeSetup`, un
+  `switch` exhaustivo sobre la `sealed class`) y botones "Ajustar" (→ config) y "Jugar" (→ partida).
+- **Tab Ajustes:** sonidos, vibración y pantalla encendida (mock, en `appSettingsProvider`), "Borrar el último
+  marcador" y "Acerca de".
+- **Limpieza:** se eliminó `PlaceholderScreen` (ya no la usa ninguna ruta); `plural()` vive en `core/utils/`;
+  `ChunkyButton` suma la variante `soft`. Tests con un helper común `test/test_utils.dart` (`pumpAppAt`).
+- **Tests:** marcador (vacío, podio, premios, estadísticas, tabla, empate, revancha, volver al catálogo), tab
+  Configurar (`describeSetup`, Ajustar, Jugar), Ajustes (switches, borrar marcador) y fin de Charadas → podio.
 
 ## Novedades de la Fase 4
 - **Partidas mock a pantalla completa** (sin bottom nav) fieles a `design/stitch/partida_*`, que reemplazan al
@@ -72,7 +92,7 @@ El mockup se hizo en Google Stitch y está exportado en [`design/stitch/`](desig
   avatar; el "atrás" de Android pide la misma confirmación) y `TimerBar` / `CountdownBuilder` (cuenta regresiva
   con `AnimationController`, pausable).
 - **Resultado de la partida:** al terminar se guarda en `lastMatchResultProvider` (juego, puntajes ordenados y
-  frase final) y se navega a `/resultados`, listo para el podio de la Fase 5.
+  frase final) y se navega a `/resultados`.
 - **Tests:** cada partida (avanzar carta, sumar puntos, cambio de turno, pausa, resaltar opción, robo, rol
   mientras se presiona, sospechosos, salir con confirmación, terminar → resultados), `TimerBar`, contenido mock.
   Los timers se apagan en tests con `liveTimersEnabledProvider.overrideWithValue(false)`.

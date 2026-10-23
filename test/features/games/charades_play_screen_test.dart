@@ -99,6 +99,10 @@ void main() {
     final result = container.read(lastMatchResultProvider)!;
     expect(result.gameId, 'charadas');
     expect(result.scores.map((s) => s.points), [3, 3]);
+    expect(result.plays, 6);
+    expect(result.awards.first.title, 'Máquina de aciertos');
+    expect(find.text('¡Partida finalizada!'), findsOneWidget);
+    expect(find.text('Máquina de aciertos'), findsOneWidget);
   });
 
   testWidgets('"Salir" pide confirmación y vuelve al home', (tester) async {

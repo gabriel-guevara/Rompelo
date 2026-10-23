@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/plural.dart';
 import '../../../core/widgets/chunky_button.dart';
 import '../../../core/widgets/chunky_card.dart';
 import '../../../core/widgets/chunky_pressable.dart';
@@ -56,6 +57,11 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
 
   late final List<int> _scores = List.filled(_participants.length, 0);
 
+  // Estadísticas para los "premios de la noche" del marcador.
+  late final List<int> _corrects = List.filled(_participants.length, 0);
+  late final List<int> _steals = List.filled(_participants.length, 0);
+  final DateTime _startedAt = DateTime.now();
+
   int _index = 0;
   int _answering = 0;
   int? _selected;
@@ -80,6 +86,8 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
       _revealed = true;
       if (correct) {
         _scores[_answering] += _points;
+        _corrects[_answering]++;
+        if (_stolen) _steals[_answering]++;
       } else if (_stolen) {
         _scores[_answering] -= kStealPenalty;
       }
@@ -134,9 +142,38 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
           for (var i = 0; i < _participants.length; i++)
             ScoreEntry(name: _participants[i], points: _scores[i]),
         ],
-        summary: '¡Se acabaron las preguntas!',
+        summary: '¡Cerebros en llamas!',
+        detail: plural(_index + 1, 'pregunta', 'preguntas'),
+        plays: _index + 1,
+        playsLabel: 'Preguntas jugadas',
+        elapsed: DateTime.now().difference(_startedAt),
+        awards: _awards(),
       ),
     );
+  }
+
+  List<MatchAward> _awards() {
+    final brain = bestIndex(_corrects);
+    final thief = bestIndex(_steals);
+    return [
+      if (brain != null)
+        MatchAward(
+          title: 'Cerebro de la noche',
+          description: 'Más respuestas correctas',
+          winner: _participants[brain],
+          caption: plural(_corrects[brain], 'acierto', 'aciertos'),
+          icon: Icons.psychology_rounded,
+        ),
+      if (thief != null)
+        MatchAward(
+          title: 'Ladrón de turnos',
+          description: 'Robos que salieron bien',
+          winner: _participants[thief],
+          caption: plural(_steals[thief], 'robo', 'robos'),
+          icon: Icons.bolt_rounded,
+          tone: AwardTone.wine,
+        ),
+    ];
   }
 
   @override

@@ -18,6 +18,9 @@ enum ChunkyButtonVariant {
   /// Leche con texto tinta (p. ej. "Pasar").
   milk(AppColors.milk, AppColors.ink, AppColors.shadowTactile),
 
+  /// Lila suave con texto tinta (acción secundaria, "Volver al catálogo").
+  soft(AppColors.surfaceContainer, AppColors.ink, AppColors.surfaceDim),
+
   /// Fantasma: borde, sin relleno ni sombra.
   ghost(Colors.transparent, AppColors.ink, Colors.transparent);
 

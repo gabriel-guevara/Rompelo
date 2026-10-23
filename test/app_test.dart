@@ -33,11 +33,15 @@ void main() {
 
     await tester.tap(find.text('Ajustes'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('100 % offline'), findsOneWidget);
+    expect(find.text('Durante la partida'), findsOneWidget);
 
     await tester.tap(find.text('Marcador'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('podio'), findsOneWidget);
+    expect(find.text('Aún no hay marcador'), findsOneWidget);
+
+    await tester.tap(find.text('Configurar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Ajustar'), findsWidgets);
   });
 
   testWidgets('la partida se abre a pantalla completa, sin bottom nav',

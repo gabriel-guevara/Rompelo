@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/plural.dart';
 import '../../../core/widgets/chunky_button.dart';
 import '../../../core/widgets/chunky_card.dart';
 import '../../../core/widgets/chunky_pressable.dart';
@@ -50,6 +51,11 @@ class _CharadesPlayScreenState extends ConsumerState<CharadesPlayScreen> {
 
   late final List<int> _scores = List.filled(_participants.length, 0);
 
+  // Estadísticas para los "premios de la noche" del marcador.
+  late final List<int> _corrects = List.filled(_participants.length, 0);
+  late final List<int> _passes = List.filled(_participants.length, 0);
+  final DateTime _startedAt = DateTime.now();
+
   int _cardIndex = 0;
   int _turn = 0;
   int _cardsThisTurn = 0;
@@ -61,11 +67,15 @@ class _CharadesPlayScreenState extends ConsumerState<CharadesPlayScreen> {
   CharadesCard get _card => _cards[_cardIndex % _cards.length];
 
   void _correct() {
-    setState(() => _scores[_current]++);
+    setState(() {
+      _scores[_current]++;
+      _corrects[_current]++;
+    });
     _nextCard();
   }
 
   void _pass() {
+    _passes[_current]++;
     if (_setup.penaltyOnPass && _scores[_current] > 0) {
       setState(() => _scores[_current]--);
     }
@@ -99,9 +109,39 @@ class _CharadesPlayScreenState extends ConsumerState<CharadesPlayScreen> {
           for (var i = 0; i < _participants.length; i++)
             ScoreEntry(name: _participants[i], points: _scores[i]),
         ],
-        summary: '¡Se acabaron las rondas!',
+        summary: 'Risas garantizadas',
+        detail: plural(_setup.rounds, 'ronda intensa', 'rondas intensas'),
+        plays: _cardIndex,
+        playsLabel: 'Tarjetas jugadas',
+        elapsed: DateTime.now().difference(_startedAt),
+        awards: _awards(),
       ),
     );
+  }
+
+  List<MatchAward> _awards() {
+    final ace = bestIndex(_corrects);
+    final passer = bestIndex(_passes);
+    return [
+      if (ace != null)
+        MatchAward(
+          title: 'Máquina de aciertos',
+          description: 'Más cartas adivinadas',
+          winner: _participants[ace],
+          caption: plural(_corrects[ace], 'acierto', 'aciertos'),
+          icon: Icons.bolt_rounded,
+          tone: AwardTone.wine,
+        ),
+      if (passer != null)
+        MatchAward(
+          title: 'Mímica más confusa',
+          description: '¿Un perro o una tostadora?',
+          winner: _participants[passer],
+          caption: plural(_passes[passer], 'carta pasada', 'cartas pasadas'),
+          icon: Icons.gesture_rounded,
+          tone: AwardTone.warm,
+        ),
+    ];
   }
 
   Future<void> _pause() async {

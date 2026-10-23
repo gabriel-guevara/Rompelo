@@ -10,7 +10,7 @@
 | 2 — Home / Explorar | ✅ Hecha | `da836d2` | Home real, MagicPickerCard, GameCard, filtro por vibra, `playerCountProvider` |
 | 3 — Configuraciones | ✅ Hecha | `38debcb` | 3 pantallas de config, `MatchSetup` sealed, providers por juego, `DeckList`, `PlayerNamesEditor` |
 | 4 — Pantallas en partida | ✅ Hecha | `afb024a` | 3 partidas mock, `LiveGameTopBar`, `TimerBar`, contenido mock, `lastMatchResultProvider` |
-| 5 — Resultados y tabs | ⏳ Pendiente | | |
+| 5 — Resultados y tabs | ✅ Hecha | *(pendiente de registrar)* | Marcador con podio/premios/estadísticas, revancha, tabs Configurar y Ajustes |
 | 6 — Tests, pulido y README final | ⏳ Pendiente | | |
 
 ## Instalar Flutter en el contenedor
@@ -60,7 +60,8 @@ Ojo: `flutter test` con `test/widget_test.dart` de `flutter create` presente fal
   botón, chips, tiles, segmentos y stepper.
 - **Fase 1 — `GameAccent`** (enum en `game_item.dart`) agrupa los colores de tag, icono y CTA de cada juego
   (wine = Charadas, sky = Impostor, warm = Trivia con CTA vino).
-- **Fase 1 — `PlaceholderScreen`:** pantalla temporal reutilizada por todas las rutas aún sin UI.
+- **Fase 1 — `PlaceholderScreen`:** pantalla temporal reutilizada por todas las rutas aún sin UI
+  (eliminada en la Fase 5, cuando ya ninguna ruta la usaba).
   El home temporal incluye una vitrina de los widgets core (se elimina en la Fase 2).
 - **Fase 2 — widgets del catálogo** en `lib/features/catalog/widgets/` (`game_card.dart`, `magic_picker_card.dart`),
   hermanos de `presentation/` como indica el árbol del plan. Son presentacionales: reciben datos y callbacks,
@@ -140,17 +141,38 @@ Ojo: `flutter test` con `test/widget_test.dart` de `flutter create` presente fal
   sin animaciones infinitas (ping/pulse/spin) para no romper tests ni distraer; botones extra que el mockup
   no tiene pero el flujo necesita: "Confirmar respuesta"/"Siguiente pregunta" (Trivia), "Siguiente turno"
   (Impostor) y el veredicto de la votación; en Charadas el rival se atenúa para mostrar quién actúa.
+- **Fase 5 — `MatchResult` en `features/games/domain/`** (antes en el provider, que ahora lo re-exporta):
+  es dominio puro que producen las partidas y consume el marcador. Campos nuevos con valores por defecto
+  (`detail`, `plays`, `playsLabel`, `elapsed`, `awards`) para no romper a quien no los use. `scores` se ordena
+  en el constructor con `sort` estable (en empate se conserva el orden original).
+- **Fase 5 — premios derivados de datos reales de la partida**, no inventados: cada pantalla cuenta aciertos,
+  pases, robos exitosos y preguntas hechas, y `bestIndex` elige al mejor (nadie gana con 0). Las estadísticas
+  del mockup "Gritos y risas 94 dB" se reemplazaron por "Puntos repartidos" (no hay micrófono) y "Tarjetas
+  jugadas" usa el nombre de cada juego ("Preguntas jugadas", "Turnos de pregunta") y la duración real.
+- **Fase 5 — podio:** columnas 2-1-3 alineadas por la base; con 2 participantes el bronce queda vacío; del 4.º en
+  adelante una tabla (RF ranking final). Avatares emoji (👑 🥈 🥉). Nombres en 2 líneas ("Team Burbujas"). Si
+  los dos primeros empatan, el subtítulo dice "¡Empate en la cima!" en vez del `summary`.
+- **Fase 5 — confeti estático** (`CustomPainter` con `Random(7)` y `shouldRepaint: false`): sin animación
+  infinita, igual que en la Fase 4.
+- **Fase 5 — tab Configurar:** cada tarjeta es un `ConsumerWidget` que solo escucha
+  `matchSetupProvider(game.id)`; "Jugar" lleva directo a la partida (otro camino de ≤ 3 toques).
+  `describeSetup` usa *patterns* de Dart 3 (`CharadesSetup(:final rounds)`), compatibles con `sdk >=3.0`.
+- **Fase 5 — Ajustes mock** en `features/settings/providers/app_settings_provider.dart` (`AppSettings` inmutable
+  + `Notifier`); aún no hay sonidos ni vibración reales. "Borrar el último marcador" llama a
+  `lastMatchResultProvider.notifier.clear()`.
+- **Fase 5 — tests:** helper común `test/test_utils.dart` (`pumpAppAt(tester, ruta, prepare:)`, timers
+  apagados, viewport 800 × 2400); `game_test_utils.dart` lo reutiliza. En `app_test.dart` (800 × 600) solo se
+  buscan textos de la parte visible: las listas son perezosas.
 - Se respeta la regla "nunca todo en mayúsculas" de DESIGN.md aunque algunos `code.html` usen `uppercase`
   en etiquetas de sección (`SectionHeader` no las pasa a mayúsculas).
 
 ## Pendientes / notas para la siguiente sesión
-- **Fase 5** lee `ref.watch(lastMatchResultProvider)` (`MatchResult?`: `gameId`, `scores` ya ordenados de
-  mayor a menor, `summary`). Si es `null`, la tab Marcador muestra el estado vacío. "¡Jugar revancha!" →
-  `context.go(AppRoutes.playGame(result.gameId))` (los providers de setup no son `autoDispose`, así que la
-  configuración se conserva). Reemplazar `PlaceholderScreen` en `results_screen.dart` y ajustar
-  `test/app_test.dart` ("tocar una tab" busca el texto "podio" del placeholder).
-- Premios/estadísticas del mockup `resultados` no tienen datos todavía: o se derivan de `scores` (ganador,
-  diferencia, total) o se agregan campos a `MatchResult` (p. ej. aciertos/pases) desde cada partida.
-- En Charadas los gestos "Arriba: Pasar / Abajo: Acierto" son decorativos (sin giroscopio).
-- La campana del home solo muestra un SnackBar (no hay notificaciones reales).
-- `PlaceholderScreen` sigue en uso por Marcador y Ajustes (Fase 5).
+- **Fase 6:** test de flujo completo home → configurar → partida → resultados → revancha / catálogo (hoy hay
+  tramos sueltos: `app_test` llega a la partida y los tests de cada partida y del marcador cubren el resto).
+- Revisión visual de **todas** las rutas contra `design/stitch/*/screen.png` (las de partida y resultados ya
+  se compararon en las fases 4 y 5) y capturas finales en `docs/screenshots/` para el README.
+- Accesibilidad: varios botones de icono (pausa, campana) solo tienen `semanticLabel` vía `ChunkyPressable`;
+  revisar áreas táctiles ≥ 48 px (el botón de pausa de Charadas mide 32 px) y contraste de textos sobre vino.
+- README final completo (ver `docs/fases/fase-6.md`): hoy tiene "Novedades" por fase; reorganizarlo en
+  secciones temáticas (navegación y rutas, gestión de estado, cómo agregar un juego…).
+- Los ajustes (sonido, vibración, pantalla encendida) y los gestos de Charadas son decorativos.

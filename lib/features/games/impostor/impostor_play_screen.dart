@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/plural.dart';
 import '../../../core/widgets/chunky_button.dart';
 import '../../../core/widgets/chunky_card.dart';
 import '../../../core/widgets/chunky_pressable.dart';
@@ -49,6 +50,11 @@ class _ImpostorPlayScreenState extends ConsumerState<ImpostorPlayScreen> {
 
   /// Arranca en el 2.º jugador, como el mockup ("Turno de Clara").
   int _asker = 1;
+
+  /// Preguntas hechas por cada jugador (premio "Interrogador estrella").
+  late final List<int> _questionsAsked = List.filled(_names.length, 0)
+    ..[1 % _names.length] = 1;
+  final DateTime _startedAt = DateTime.now();
   final Set<int> _suspects = {};
   bool _revealing = false;
   bool _debateOver = false;
@@ -56,7 +62,10 @@ class _ImpostorPlayScreenState extends ConsumerState<ImpostorPlayScreen> {
   List<String> get _names => _setup.playerNames;
   int get _target => (_asker + 1) % _names.length;
 
-  void _nextTurn() => setState(() => _asker = _target);
+  void _nextTurn() => setState(() {
+        _asker = _target;
+        _questionsAsked[_asker]++;
+      });
 
   void _toggleSuspect(int player) => setState(() {
         if (!_suspects.remove(player)) _suspects.add(player);
@@ -101,8 +110,56 @@ class _ImpostorPlayScreenState extends ConsumerState<ImpostorPlayScreen> {
             ),
         ],
         summary: caught ? '¡Atraparon al impostor!' : '¡El impostor escapó!',
+        detail: 'Debate de ${_setup.debateMinutes} min',
+        plays: _questionsAsked.fold(0, (sum, n) => sum + n),
+        playsLabel: 'Turnos de pregunta',
+        elapsed: DateTime.now().difference(_startedAt),
+        awards: _awards(caught: caught, impostorNames: impostorNames),
       ),
     );
+  }
+
+  List<MatchAward> _awards({
+    required bool caught,
+    required String impostorNames,
+  }) {
+    final innocentSuspects = _suspects.where((i) => !_impostors.contains(i));
+    final asker = bestIndex(_questionsAsked);
+    return [
+      caught
+          ? MatchAward(
+              title: 'Impostor descubierto',
+              description: 'No le alcanzó el disimulo',
+              winner: impostorNames,
+              caption: 'Lo pillaron',
+              icon: Icons.theater_comedy_rounded,
+            )
+          : MatchAward(
+              title: 'El mejor farsante',
+              description: 'Impostor sin ser descubierto',
+              winner: impostorNames,
+              caption: 'Voto fallido',
+              icon: Icons.theater_comedy_rounded,
+            ),
+      if (innocentSuspects.isNotEmpty)
+        MatchAward(
+          title: 'Falsa alarma',
+          description: 'Señalado sin tener culpa',
+          winner: _names[innocentSuspects.first],
+          caption: 'Era inocente',
+          icon: Icons.priority_high_rounded,
+          tone: AwardTone.wine,
+        ),
+      if (asker != null)
+        MatchAward(
+          title: 'Interrogador estrella',
+          description: 'Quien más preguntó',
+          winner: _names[asker],
+          caption: plural(_questionsAsked[asker], 'pregunta', 'preguntas'),
+          icon: Icons.record_voice_over_rounded,
+          tone: AwardTone.warm,
+        ),
+    ];
   }
 
   @override
