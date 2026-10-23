@@ -35,11 +35,14 @@ class _ConfettiPainter extends CustomPainter {
     final random = Random(7);
     final paint = Paint();
     for (var i = 0; i < 22; i++) {
-      paint.color = _colors[i % _colors.length].withValues(alpha: 0.85);
+      paint.color = _colors[i % _colors.length].withValues(alpha: 0.6);
+      // Solo en las franjas laterales (18 % de cada lado): el confeti
+      // decora sin tapar el título ni el subtítulo.
+      final side = random.nextDouble() * 0.18;
+      final x = (i.isEven ? side : 1 - side) * size.width;
       canvas
         ..save()
-        ..translate(
-            random.nextDouble() * size.width, random.nextDouble() * size.height)
+        ..translate(x, random.nextDouble() * size.height)
         ..rotate(random.nextDouble() * pi)
         ..drawRRect(
           RRect.fromRectAndRadius(

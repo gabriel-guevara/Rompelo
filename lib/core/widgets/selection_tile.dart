@@ -53,7 +53,7 @@ class SelectionTile extends StatelessWidget {
       child: ChunkyPressable(
         onTap: onTap,
         selected: selected,
-        semanticLabel: title,
+        semanticLabel: [title, badge, subtitle].whereType<String>().join('. '),
         builder: (context, pressed) => AnimatedScale(
           // Pequeño "rebote" al seleccionar (scale 1.02 del mockup).
           scale: selected && !pressed ? 1.02 : 1,

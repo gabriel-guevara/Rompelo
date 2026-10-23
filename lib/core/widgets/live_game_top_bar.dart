@@ -42,7 +42,7 @@ class LiveGameTopBar extends StatelessWidget implements PreferredSizeWidget {
                 builder: (context, pressed) => AnimatedContainer(
                   duration: kChunkyPressDuration,
                   constraints:
-                      const BoxConstraints(minHeight: 44, minWidth: 44),
+                      const BoxConstraints(minHeight: 48, minWidth: 48),
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   transform: Matrix4.translationValues(0, pressed ? 2 : 0, 0),
                   decoration: BoxDecoration(

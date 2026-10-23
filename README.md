@@ -6,20 +6,51 @@ dispositivo compartido**, 100 % offline y sin registro. Catálogo inicial: **Cha
 
 > Proyecto de *Desarrollo de Aplicaciones Móviles Nativas* — Ingeniería de Software, UCompensar (Bogotá, 2026).
 
-## Objetivo
+![Pantallas de Rómpelo: home, configuración, las tres partidas y el marcador](docs/screenshots/overview.png)
+
+## Contenido
+1. [Objetivo y requerimientos](#objetivo-y-requerimientos)
+2. [Estado del proyecto](#estado-del-proyecto)
+3. [Capturas](#capturas)
+4. [Cómo ejecutar](#cómo-ejecutar)
+5. [Stack y por qué](#stack-y-por-qué)
+6. [Estructura del código](#estructura-del-código)
+7. [Sistema de diseño](#sistema-de-diseño)
+8. [Navegación y rutas](#navegación-y-rutas)
+9. [Gestión de estado](#gestión-de-estado)
+10. [Cómo agregar un juego nuevo](#cómo-agregar-un-juego-nuevo)
+11. [Tests y calidad](#tests-y-calidad)
+12. [Accesibilidad](#accesibilidad)
+13. [Changelog por fase](#changelog-por-fase)
+14. [Equipo](#equipo)
+
+## Objetivo y requerimientos
 Facilitar la interacción social cara a cara usando la menor cantidad de tecnología posible: el celular actúa
 como "maestro de juego" y muestra instrucciones, palabras o preguntas mientras el grupo juega en persona.
 
-### Requerimientos clave
 - **Funcionales:** catálogo de juegos · configurar partida (jugadores, categorías, dificultad) · nombres de
   jugadores · Charadas con temporizador · Trivia con puntaje · Impostor con roles secretos pasando el celular ·
   marcador y ranking final · repetir o cambiar de juego sin reiniciar.
 - **No funcionales:** offline · un solo dispositivo · arranque < 3 s · iniciar partida en ≤ 3 toques ·
   legible a distancia · Android · sin datos personales · código modular para agregar juegos.
 
-## Estado actual
-🚧 **En desarrollo del front-end.** El alcance actual son las pantallas y la navegación según el mockup;
-los juegos funcionan como maquetas navegables con datos de ejemplo.
+| Requerimiento | Dónde se cumple |
+|---|---|
+| Catálogo con descripción | Home: `GameCard` por juego, filtro "Explora por vibra", "¡Elegir juego al azar!" |
+| Configurar partida y nombres | `/configurar/<juego>`: jugadores, mazos, reglas, equipos y nombres (`PlayerNamesEditor`) |
+| Charadas con temporizador | `TimerBar` por turno, pausa, Pasar / ¡Acierto! |
+| Trivia con puntaje | Marcador por equipos o jugadores, +50 / +100, robo de turno (-20) |
+| Impostor pasando el celular | Rol secreto visible **solo mientras se presiona**, radar de sospechosos y votación |
+| Marcador y ranking final | `/resultados`: podio, tabla completa, premios y estadísticas |
+| Repetir o cambiar de juego | "¡Jugar revancha inmediata!" (misma configuración) y "Volver al catálogo" |
+| Iniciar en ≤ 3 toques | Home → "Configurar y jugar" (valores por defecto listos) → CTA de inicio; o tab Configurar → "Jugar" |
+| Offline | Fuente Outfit empaquetada, contenido mock local, sin red ni registro |
+| Legible a distancia | Outfit en pesos 700–900, cifras tabulares, contraste WCAG verificado en tests |
+| Código modular | Feature-first + un `switch` por juego (ver [Cómo agregar un juego](#cómo-agregar-un-juego-nuevo)) |
+
+## Estado del proyecto
+✅ **Front-end completo**: todas las pantallas del mockup navegables, con los juegos como **maquetas
+funcionales con datos de ejemplo** (no hay lógica real de juego, sensores ni persistencia entre sesiones).
 
 | Fase | Contenido | Estado |
 |---|---|---|
@@ -29,144 +60,181 @@ los juegos funcionan como maquetas navegables con datos de ejemplo.
 | 3 | Pantallas de configuración | ✅ |
 | 4 | Pantallas en partida | ✅ |
 | 5 | Resultados / podio + tabs | ✅ |
-| 6 | Tests, pulido y README final | ⏳ |
+| 6 | Tests, pulido y README final | ✅ |
 
-Detalle en [`docs/plan-front.md`](docs/plan-front.md) y avance en [`docs/progreso.md`](docs/progreso.md).
+Plan en [`docs/plan-front.md`](docs/plan-front.md), decisiones y avance en [`docs/progreso.md`](docs/progreso.md).
 
-## Diseño
-El mockup se hizo en Google Stitch y está exportado en [`design/stitch/`](design/stitch/) (captura `screen.png` +
-`code.html` por pantalla). El sistema de diseño **"Rómpelo Dynamic Party System"**
-([`DESIGN.md`](design/stitch/DESIGN.md)) usa:
-- **Colores:** azul cielo `#95baeb` (ambiente), vino `#930400` (acción/tensión), leche `#fff7e6` (superficies),
-  tinta ciruela `#1f1b2e` (texto).
-- **Tipografía:** Outfit, en mayúsculas y minúsculas normales (nunca todo en mayúsculas), con cifras tabulares.
-- **Estilo "chunky":** botones pill y tarjetas muy redondeadas con sombra sólida inferior que se hunde al presionar.
+## Capturas
+Capturas web a 390 px de ancho (`docs/screenshots/`), comparadas con el mockup de `design/stitch/`.
 
-## Stack
-| Herramienta | Versión | Para qué |
-|---|---|---|
-| Flutter / Dart | 3.47 (stable) / 3.13 | UI nativa |
-| `go_router` | ^17.5.0 | Navegación declarativa con barra inferior (`StatefulShellRoute.indexedStack`) |
-| `flutter_riverpod` | ^3.4.3 | Estado (router, número de jugadores, configuración de cada partida, resultado de la última y ajustes) |
-| Fuente Outfit (TTF variable) | `assets/fonts/` | Tipografía empaquetada, funciona offline |
-| `flutter_lints` | ^6.0.0 | Reglas de estilo para `flutter analyze` |
+| Home | Configurar | Config. Charadas | Config. Trivia | Config. Impostor |
+|---|---|---|---|---|
+| ![](docs/screenshots/01-home.png) | ![](docs/screenshots/02-configurar.png) | ![](docs/screenshots/03-config-charadas.png) | ![](docs/screenshots/04-config-trivia.png) | ![](docs/screenshots/05-config-impostor.png) |
 
-## Novedades de la Fase 5
-- **Marcador real** (`features/results/presentation/results_screen.dart`) fiel a `design/stitch/resultados`:
-  badge "Fin del juego", "¡Partida finalizada!" con confeti estático, **podio** 2-1-3 (`widgets/podium.dart`,
-  1.º en vino), tabla del 4.º en adelante, **premios de la noche** (`award_tile.dart`) y **estadísticas**
-  (`stat_tile.dart`: jugadas/duración y puntos repartidos/ventaja). Avisa los empates en la cima.
-- **"¡Jugar revancha inmediata!"** vuelve a `/partida/<juego>` con la misma configuración y **"Volver al catálogo
-  de juegos"** a `/` (RF "repetir o cambiar de juego sin reiniciar"). Sin partidas: estado vacío con CTA al catálogo.
-- **`MatchResult` ampliado** y movido a `features/games/domain/match_result.dart`: `detail`, `plays`/`playsLabel`,
-  `elapsed` y `awards` (`MatchAward` con tono sky/wine/warm). Cada partida registra aciertos, pases, robos y
-  preguntas hechas para calcular sus premios (Máquina de aciertos, Mímica más confusa, Cerebro de la noche,
-  Ladrón de turnos, El mejor farsante / Impostor descubierto, Falsa alarma, Interrogador estrella).
-- **Tab Configurar:** una tarjeta por juego con el resumen de su configuración guardada (`describeSetup`, un
-  `switch` exhaustivo sobre la `sealed class`) y botones "Ajustar" (→ config) y "Jugar" (→ partida).
-- **Tab Ajustes:** sonidos, vibración y pantalla encendida (mock, en `appSettingsProvider`), "Borrar el último
-  marcador" y "Acerca de".
-- **Limpieza:** se eliminó `PlaceholderScreen` (ya no la usa ninguna ruta); `plural()` vive en `core/utils/`;
-  `ChunkyButton` suma la variante `soft`. Tests con un helper común `test/test_utils.dart` (`pumpAppAt`).
-- **Tests:** marcador (vacío, podio, premios, estadísticas, tabla, empate, revancha, volver al catálogo), tab
-  Configurar (`describeSetup`, Ajustar, Jugar), Ajustes (switches, borrar marcador) y fin de Charadas → podio.
-
-## Novedades de la Fase 4
-- **Partidas mock a pantalla completa** (sin bottom nav) fieles a `design/stitch/partida_*`, que reemplazan al
-  placeholder: `games/charades/charades_play_screen.dart`, `games/trivia/trivia_play_screen.dart` e
-  `games/impostor/impostor_play_screen.dart`. `gamePlayScreenFor(game)` elige la pantalla por id.
-- **Leen la configuración** con `matchSetupProvider(gameId)`: tiempo por turno/pregunta, rondas, equipos o
-  nombres, penalización al pasar, modo de respuesta, puntos doble/meta, impostores, pista y minutos de debate.
-- **Charadas:** ronda y marcador por equipo (o jugador en "todos vs todos"), timer, carta con categoría,
-  dificultad, palabra e indicación; "Pasar" (-1 si hay penalización) y "¡Acierto! +1 punto" avanzan la
-  carta; 3 cartas o fin del tiempo = cambio de turno; pausa con "Reanudar ronda" / "Terminar turno".
-- **Trivia:** marcador Team Vino / Team Burbujas (o jugador actual/siguiente "por turnos"), contador 1/12,
-  timer que pasa a "Tiempo crítico", carta de pregunta, opciones A–D que se **resaltan** al tocarlas,
-  "Confirmar respuesta" (revela y suma +50, +100 la última con puntos dobles) y "¡Robar turno!" (-20 si falla).
-- **Impostor:** timer de debate, fase secreta + tema común, turno de pregunta ("Siguiente turno"), radar de
-  sospechosos (tocar marca/desmarca), "Votar y delatar al impostor" (veredicto → resultados) y
-  "Mantén presionado para ver tu rol", que muestra la palabra o el rol **solo mientras se presiona**.
-- **Contenido mock** (`games/data/mock_game_content.dart`): cartas, preguntas y temas con los mismos ids de mazo
-  que `deck_options.dart`, intercalados según los mazos elegidos.
-- **Widgets core nuevos:** `LiveGameTopBar` ("Salir" con diálogo de confirmación → `/`, badge "Partida en vivo",
-  avatar; el "atrás" de Android pide la misma confirmación) y `TimerBar` / `CountdownBuilder` (cuenta regresiva
-  con `AnimationController`, pausable).
-- **Resultado de la partida:** al terminar se guarda en `lastMatchResultProvider` (juego, puntajes ordenados y
-  frase final) y se navega a `/resultados`.
-- **Tests:** cada partida (avanzar carta, sumar puntos, cambio de turno, pausa, resaltar opción, robo, rol
-  mientras se presiona, sospechosos, salir con confirmación, terminar → resultados), `TimerBar`, contenido mock.
-  Los timers se apagan en tests con `liveTimersEnabledProvider.overrideWithValue(false)`.
-
-## Novedades de la Fase 3
-- **Pantallas de configuración reales** para Charadas, Trivia e Impostor (`features/setup/presentation/`),
-  fieles a `design/stitch/config_*`. Cada CTA ("¡Empezar a actuar!", "¡Calentar pulsadores y jugar!",
-  "Repartir identidades secretas") lleva a `/partida/<juego>`. Se eliminó el placeholder de configuración.
-- **Modelo inmutable `MatchSetup`** (`domain/match_setup.dart`): `sealed class` con `CharadesSetup`,
-  `TriviaSetup` e `ImpostorSetup` (`copyWith`, rangos de jugadores del catálogo, mínimo de mazos, regla de
-  2 impostores desde 6 jugadores).
-- **Providers** (`providers/match_setup_provider.dart`): un `Notifier` por juego con valores por defecto
-  listos para jugar (flujo ≤ 3 toques) que siguen al selector de jugadores del home con `ref.listen`, y
-  `matchSetupProvider(gameId)` para leer cualquier configuración desde la partida o los resultados.
-- **Widgets compartidos** (`features/setup/widgets/`): `ConfigScaffold`, `GameConfigHero`, `ConfigSection`,
-  `RuleRow`, `RuleSwitch`, `OptionLabel`, `CountBadge`, `DeckList` y `PlayerNamesEditor` (chips "👑 P1 Mateo"
-  que se renombran con un diálogo: RF "ingresar nombres"). `SelectionTile` acepta emoji y color de badge.
-- **Tests:** dominio, providers (jugadores, mazos, impostores, nombres) y pantallas (CTA → partida, controles
-  que cambian el estado, renombrar jugador).
-
-## Novedades de la Fase 2
-- **Home real** (`features/catalog/presentation/home_screen.dart`) fiel a `design/stitch/home`: header con
-  campana y avatar, "¿Qué jugamos hoy?" con selector de mesa (hoja inferior Mesa 1–8), selector mágico,
-  "Explora por vibra" y las tarjetas de juego. Se eliminó la vitrina temporal de la Fase 1.
-- **`MagicPickerCard`**: tarjeta azul con degradado, `CounterStepper` de jugadores y "¡Elegir juego al azar!",
-  que sortea entre los juegos donde cabe el grupo y navega a su configuración.
-- **`GameCard`**: tag, duración/jugadores, título, descripción, ilustración (icono), chips y CTA
-  "Configurar y jugar" (vino o azul según el juego) → `/configurar/<juego>`.
-- **Filtro por vibra:** nuevo enum `GameVibe` (🎉 Fiesta total, 🕵️ Misterio, ⚡ Reflejos rápidos,
-  🍷 Chill con amigos) y campo `vibes` en `GameItem`; el badge cuenta los juegos visibles.
-- **Primer provider de estado:** `playerCountProvider` (`features/setup/providers/`) guarda los jugadores
-  reunidos (2–24, empieza en 6); la configuración lo usará como valor inicial en la Fase 3.
-- **Tests:** home (3 juegos, navegación, filtro, stepper, azar, mesa), provider de jugadores y funciones del
-  catálogo (`gamesByVibe`, `pickRandomGame`).
-
-## Novedades de la Fase 1
-- **Tema del mockup:** `AppColors` (tokens de `DESIGN.md`, reemplaza la paleta morada), `AppSpacing`/`AppRadius`
-  y `AppTheme` con `ColorScheme` hecho a mano y `TextTheme` Outfit (headline-xl … label-sm, cifras tabulares).
-- **Navegación:** `go_router` con 4 tabs (Explorar `/`, Configurar `/configurar`, Marcador `/resultados`,
-  Ajustes `/ajustes`), `/configurar/:juego` dentro del shell y `/partida/:juego` a pantalla completa.
-  Por ahora las pantallas son *placeholders* navegables.
-- **Widgets core** (`lib/core/widgets/`): `ChunkyButton`, `ChunkyCard`, `PillChip`, `SelectionTile`,
-  `SegmentedPills`, `CounterStepper`, `SectionHeader`, `RompeloAppBar`, `AppShellScaffold` y `PlaceholderScreen`.
-  El home temporal incluye una vitrina con todos ellos.
-- **Catálogo:** `GameItem` salió de `main.dart` a `features/catalog/` con tag, duración, rango de jugadores,
-  chips, color y rutas; los textos son los del mockup.
-- **Tests:** se reemplazó el test roto del contador por tests de arranque/navegación, del `CounterStepper` y
-  del catálogo.
-
-## Estructura del repositorio
-```
-lib/
-  main.dart · app.dart     arranque (ProviderScope → MaterialApp.router)
-  core/constants/          colores, espaciados y radios
-  core/theme/              AppTheme (ColorScheme + TextTheme Outfit)
-  core/router/             rutas (AppRoutes) y GoRouter con el shell de tabs
-  core/widgets/            componentes del sistema de diseño
-  features/<feature>/      catalog · setup · games · results · settings
-                           (cada una con domain/ data/ providers/ presentation/ widgets/ según necesite)
-assets/fonts/              Outfit (variable) + licencia OFL
-design/stitch/             mockup exportado + DESIGN.md
-docs/                      plan maestro, fichas de fase y progreso
-test/                      tests de widgets y unitarios
-```
+| Partida Charadas | Partida Trivia | Partida Impostor | Marcador | Ajustes |
+|---|---|---|---|---|
+| ![](docs/screenshots/06-partida-charadas.png) | ![](docs/screenshots/07-partida-trivia.png) | ![](docs/screenshots/08-partida-impostor.png) | ![](docs/screenshots/09-resultados.png) | ![](docs/screenshots/10-ajustes.png) |
 
 ## Cómo ejecutar
-Requisitos: [Flutter SDK](https://docs.flutter.dev/get-started/install) estable (Dart ≥ 3.0) y un emulador o
-dispositivo Android.
+Requisitos: [Flutter SDK](https://docs.flutter.dev/get-started/install) estable (probado con Flutter 3.47 /
+Dart 3.13; el proyecto declara `sdk: '>=3.0.0 <4.0.0'`) y un emulador o dispositivo Android.
 ```bash
 flutter pub get
 flutter run          # en un emulador o dispositivo Android
 flutter analyze      # análisis estático (debe dar "No issues found!")
-flutter test         # tests
+flutter test         # todos los tests
+dart format .        # formato estándar de Dart
 ```
+Para verlo en el navegador sin emulador (solo para revisar la UI; el repo no incluye la plataforma web):
+```bash
+flutter create --platforms=web .            # temporal, no se commitea
+flutter build web --no-web-resources-cdn    # sin el flag CanvasKit se pide a una CDN
+cd build/web && python3 -m http.server 8765 # abrir http://localhost:8765/#/partida/trivia
+```
+
+## Stack y por qué
+| Herramienta | Versión | Para qué | Por qué |
+|---|---|---|---|
+| Flutter / Dart | 3.47 / 3.13 | UI nativa | Una sola base de código compilada a nativo; widgets propios (no depende de los del sistema) para replicar el mockup "chunky" al píxel |
+| `go_router` | ^17.5.0 | Navegación | Paquete oficial del equipo Flutter: rutas tipo URL (`/partida/trivia`), `StatefulShellRoute` para las 4 tabs con estado propio, redirecciones y fácil de testear (como Angular Router o React Router) |
+| `flutter_riverpod` | ^3.4.3 | Estado | Providers tipados que no dependen del `BuildContext`, con `ref.watch` reactivo (como `useSelector`) y sobrescribibles en tests (como los providers del `TestBed` de Angular) |
+| Fuente Outfit (TTF variable) | `assets/fonts/` | Tipografía | Empaquetada para cumplir el RNF offline (no se descarga en runtime) |
+| `flutter_lints` | ^6.0.0 | Calidad | Reglas oficiales para `flutter analyze` |
+
+## Estructura del código
+Arquitectura **feature-first**: cada funcionalidad agrupa sus capas, en vez de una carpeta global de
+"pantallas" y otra de "modelos".
+```
+lib/
+  main.dart · app.dart            arranque (ProviderScope → MaterialApp.router)
+  core/
+    constants/                    colores (AppColors), espaciados y radios
+    theme/app_theme.dart          ColorScheme + TextTheme Outfit, withWeight / tabular
+    router/                       AppRoutes (constantes) y GoRouter con el shell de tabs
+    utils/plural.dart             "1 ronda" / "3 rondas"
+    widgets/                      sistema de diseño: ChunkyPressable (base táctil), ChunkyButton, ChunkyCard,
+                                  PillChip, SelectionTile, SegmentedPills, CounterStepper, SectionHeader,
+                                  RompeloAppBar, AppShellScaffold, LiveGameTopBar, TimerBar
+  features/
+    catalog/   domain/ (GameItem, GameVibe) · data/ (catálogo) · presentation/ (home) · widgets/
+    setup/     domain/ (MatchSetup sealed) · data/ (mazos) · providers/ · presentation/ (3 configs + tab) · widgets/
+    games/     domain/ (MatchResult) · data/ (contenido mock) · providers/ · widgets/ (LiveGameScaffold)
+               charades/ · trivia/ · impostor/ · presentation/ (gamePlayScreenFor)
+    results/   presentation/ (marcador) · widgets/ (Podium, AwardTile, StatTile, ConfettiBackdrop)
+    settings/  providers/ (AppSettings) · presentation/
+assets/fonts/   Outfit variable + licencia OFL
+design/stitch/  mockup exportado (screen.png + code.html por pantalla) + DESIGN.md
+docs/           plan maestro, fichas de fase, progreso y capturas
+test/           tests unitarios, de widgets, de flujo y de accesibilidad
+```
+
+## Sistema de diseño
+"Rómpelo Dynamic Party System" ([`DESIGN.md`](design/stitch/DESIGN.md)), mockup hecho en Google Stitch:
+- **Colores** (`AppColors`): azul cielo `#95baeb` (ambiente), vino `#930400`/`#b62416` (acción y tensión),
+  leche `#fff7e6` (superficies), tinta ciruela `#1f1b2e` (texto).
+- **Tipografía** Outfit en tipo oración (nunca todo en mayúsculas). Es una fuente **variable**: el peso se
+  aplica con `AppTheme.withWeight(style, peso)` (un `copyWith(fontWeight:)` solo no cambia el grosor) y las
+  cifras de marcadores y timers con `AppTheme.tabular(style)` para que no "bailen".
+- **Estilo "chunky"**: botones pill y tarjetas muy redondeadas con sombra sólida inferior que se hunde al
+  presionar. Todo control táctil se construye sobre `ChunkyPressable`, que centraliza el gesto, el estado
+  presionado, el área táctil mínima y la semántica.
+- **Layout**: márgenes de 20 px, contenido limitado a 540 px en tablet y botones de acción en la zona del pulgar.
+
+## Navegación y rutas
+| Ruta | Pantalla | Barra inferior |
+|---|---|---|
+| `/` | Explorar (home) | ✅ |
+| `/configurar` | Lista de juegos con su configuración | ✅ |
+| `/configurar/:juego` | Configuración de `charadas`, `trivia` o `impostor` | ✅ (tab Configurar) |
+| `/resultados` | Marcador (podio o estado vacío) | ✅ |
+| `/ajustes` | Ajustes | ✅ |
+| `/partida/:juego` | Partida a pantalla completa | ❌ |
+
+- Las 4 tabs son un `StatefulShellRoute.indexedStack`: cada rama tiene su propio `Navigator` y conserva su
+  estado al cambiar de tab.
+- `/partida/:juego` cuelga del navigator raíz (`parentNavigatorKey`), por eso tapa la barra inferior.
+  "Salir" y el "atrás" de Android (`PopScope`) piden confirmación.
+- Un `:juego` que no existe en el catálogo redirige a `/`.
+- Las rutas son constantes en `AppRoutes` (`AppRoutes.playGame('trivia')`), sin strings repetidos.
+- El router es un provider (`appRouterProvider`): cada `ProviderScope` (app o test) tiene el suyo.
+
+## Gestión de estado
+Regla: **estado efímero en el widget, estado compartido en Riverpod**.
+
+| Provider | Tipo | Qué guarda | Quién lo usa |
+|---|---|---|---|
+| `playerCountProvider` | `Notifier<int>` | Jugadores reunidos (selector mágico del home) | Home y valor inicial de cada configuración |
+| `charadesSetupProvider`, `triviaSetupProvider`, `impostorSetupProvider` | `Notifier<…Setup>` | Configuración de cada juego (inmutable, `copyWith`) | Pantallas de configuración |
+| `matchSetupProvider(gameId)` | `Provider.family` (solo lectura) | Configuración por id | Partidas y tab Configurar |
+| `lastMatchResultProvider` | `Notifier<MatchResult?>` | Resultado de la última partida | Marcador y Ajustes |
+| `appSettingsProvider` | `Notifier<AppSettings>` | Sonido, vibración, pantalla encendida (mock) | Ajustes |
+| `liveTimersEnabledProvider` | `Provider<bool>` | Interruptor de timers (`false` en tests) | Partidas |
+| `appRouterProvider` | `Provider<GoRouter>` | El router | `MaterialApp.router` |
+
+- `MatchSetup` es una **`sealed class`** (`CharadesSetup`, `TriviaSetup`, `ImpostorSetup`): un `switch`
+  sobre ella obliga a cubrir todos los juegos, como una unión discriminada de TypeScript.
+- Los providers de configuración **no** son `autoDispose`: la configuración sobrevive y la revancha la reutiliza.
+- La carta, el turno o la opción elegida de una partida viven en el `State` de la pantalla (`setState`);
+  al terminar, solo el `MatchResult` (puntajes, premios, estadísticas) sube a `lastMatchResultProvider`.
+
+## Cómo agregar un juego nuevo
+1. **Catálogo:** una entrada en `features/catalog/data/games_catalog.dart` (id, textos, rango de jugadores,
+   `GameAccent`, vibras). El id es también el segmento de la URL.
+2. **Configuración:** una subclase de `MatchSetup` en `setup/domain/match_setup.dart`, su `Notifier` en
+   `setup/providers/match_setup_provider.dart` (y un `case` en `matchSetupProvider`) y su pantalla en
+   `setup/presentation/`. El compilador marcará el `switch` de `describeSetup` hasta que lo cubras.
+3. **Mazos y contenido:** sus `DeckOption` en `setup/data/deck_options.dart` y el contenido con los mismos ids
+   en `games/data/mock_game_content.dart`.
+4. **Partida:** `games/<juego>/<juego>_play_screen.dart` sobre `LiveGameScaffold`; al terminar llama a
+   `finishMatch(context, ref, MatchResult(...))` con sus puntajes y premios.
+5. **Rutas:** un `case` en `gameConfigScreenFor` y otro en `gamePlayScreenFor` (las rutas `:juego` ya existen).
+6. **Tests:** copia el patrón de `test/features/games/*_play_screen_test.dart`; el test de accesibilidad
+   incluye las rutas nuevas agregándolas a su lista.
+
+## Tests y calidad
+```bash
+flutter test                                   # 116 tests
+flutter test test/full_flow_test.dart          # solo el flujo completo
+flutter test test/accessibility_test.dart      # solo accesibilidad
+```
+| Tipo | Archivos | Qué cubre |
+|---|---|---|
+| Unitarios | `games_catalog_test`, `match_setup_test`, `*_provider_test`, `mock_game_content_test`, `results_screen_test` (modelo) | Reglas de dominio, providers, contenido mock, cálculos del resultado |
+| Widgets | `test/core/widgets/`, `test/features/**/` | Cada pantalla y componente: interacción y estado |
+| Flujo | `full_flow_test.dart`, `app_test.dart` | Home → configurar → partida → marcador → revancha → catálogo, solo con toques |
+| Accesibilidad | `accessibility_test.dart` | 10 rutas × 3 guías (áreas táctiles, etiquetas, contraste) |
+
+Notas para escribir tests:
+- `test/test_utils.dart` → `pumpAppAt(tester, '/ruta', prepare: (container) {...})` monta la app real con los
+  timers apagados. Un timer corriendo haría que `pumpAndSettle` esperara el turno entero.
+- La fuente de test (Ahem) dibuja cada letra de 1 em: los tests usan viewports anchos (600–800 px) y el ancho
+  móvil real se valida con capturas web.
+- Las listas son perezosas: para tocar algo fuera de pantalla, `scrollUntilVisible` + `ensureVisible`.
+
+## Accesibilidad
+Verificada con las guías de `flutter_test` en todas las rutas (`test/accessibility_test.dart`):
+- **Áreas táctiles ≥ 48 × 48 px** sin agrandar el dibujo: `ChunkyPressable` usa un `RenderBox` propio
+  (`_MinTapArea`) que respeta las restricciones del padre y solo crece alrededor del control.
+- **Etiquetas para TalkBack** en todos los controles, sin lecturas duplicadas (`excludeSemantics` cuando hay
+  `semanticLabel`). Los botones de icono (pausa, campana, steppers) tienen etiqueta propia.
+- **Contraste WCAG** de todos los textos.
+- Ancho máximo de 540 px en tablet; tipografía grande y gruesa para leer a distancia.
+
+## Changelog por fase
+- **Fase 6 — Tests, pulido y README final:** test de flujo completo y test de accesibilidad (30 comprobaciones),
+  área táctil mínima y semántica centralizadas en `ChunkyPressable`, campo de nombres de equipo a 48 px,
+  podio centrado con 2 participantes, confeti fuera del texto, capturas en `docs/screenshots/`, este README.
+- **Fase 5 — Resultados y tabs:** marcador con podio, tabla, premios y estadísticas calculados de la partida;
+  revancha y vuelta al catálogo; tab Configurar con resumen de cada configuración; Ajustes mock; se eliminó
+  `PlaceholderScreen`.
+- **Fase 4 — Partidas:** Charadas, Trivia e Impostor a pantalla completa con contenido mock, `LiveGameTopBar`
+  ("Salir" con confirmación) y `TimerBar` (`AnimationController`, pausable).
+- **Fase 3 — Configuración:** `MatchSetup` sealed, un provider por juego, mazos, reglas y nombres de jugadores.
+- **Fase 2 — Home:** selector mágico, juego al azar, filtro por vibra y tarjetas de juego.
+- **Fase 1 — Fundaciones:** tema del mockup, fuente Outfit, router con 4 tabs y widgets core.
+- **Fase 0 — Plan:** mockup de Stitch en el repo, plan maestro y fichas por fase.
+
+Detalle de cada decisión en [`docs/progreso.md`](docs/progreso.md).
 
 ## Equipo
 - Gabriel Sebastián Guevara Téllez

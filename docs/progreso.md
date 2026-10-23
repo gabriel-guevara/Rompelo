@@ -11,7 +11,7 @@
 | 3 — Configuraciones | ✅ Hecha | `38debcb` | 3 pantallas de config, `MatchSetup` sealed, providers por juego, `DeckList`, `PlayerNamesEditor` |
 | 4 — Pantallas en partida | ✅ Hecha | `afb024a` | 3 partidas mock, `LiveGameTopBar`, `TimerBar`, contenido mock, `lastMatchResultProvider` |
 | 5 — Resultados y tabs | ✅ Hecha | `036826c` | Marcador con podio/premios/estadísticas, revancha, tabs Configurar y Ajustes |
-| 6 — Tests, pulido y README final | ⏳ Pendiente | | |
+| 6 — Tests, pulido y README final | ✅ Hecha | *(pendiente de registrar)* | Flujo completo, accesibilidad (30 checks), `_MinTapArea`, capturas, README final |
 
 ## Instalar Flutter en el contenedor
 El contenedor de cada sesión es efímero y no trae Flutter. `storage.googleapis.com` y `pub.dev` son accesibles.
@@ -163,16 +163,47 @@ Ojo: `flutter test` con `test/widget_test.dart` de `flutter create` presente fal
 - **Fase 5 — tests:** helper común `test/test_utils.dart` (`pumpAppAt(tester, ruta, prepare:)`, timers
   apagados, viewport 800 × 2400); `game_test_utils.dart` lo reutiliza. En `app_test.dart` (800 × 600) solo se
   buscan textos de la parte visible: las listas son perezosas.
+- **Fase 6 — accesibilidad medida, no supuesta:** `test/accessibility_test.dart` corre
+  `androidTapTargetGuideline`, `labeledTapTargetGuideline` y `textContrastGuideline` en las 10 rutas (con una
+  partida guardada para el marcador). Viewport de 600 px: a 390 la fuente Ahem desborda filas. Contraste y
+  etiquetas ya pasaban; fallaban áreas táctiles (steppers 40, chips 34, segmentos 46, "Salir" 44, campo de
+  nombre de equipo 42).
+- **Fase 6 — `_MinTapArea` en `ChunkyPressable`:** `RenderShiftedBox` propio que hace `child.layout(constraints)`
+  **sin modificarlas** y toma `max(hijo, 48)` por eje, centrando el dibujo (misma idea que el `_InputPadding`
+  privado de Material). Primer intento: `ConstrainedBox` + `Align(widthFactor: 1)` → `Align` afloja las
+  restricciones y los botones "Pasar"/"¡Acierto!" (sin ancho propio dentro de un `Expanded`) se encogían; lo
+  detectaron las capturas, no los tests. Regresión cubierta en `test/core/widgets/chunky_pressable_test.dart`
+  (se comprobó que ese test falla con la versión anterior). Implementa también los intrínsecos y el dry layout
+  (los usa `IntrinsicHeight` en Trivia y en el marcador).
+- **Fase 6 — semántica:** con `semanticLabel`, `ChunkyPressable` usa `excludeSemantics: true` (TalkBack leía
+  "Por equipos, Por equipos") y repite `onTap` en el `Semantics` porque al excluir hijos se pierde la acción
+  del `GestureDetector`. `SelectionTile` anuncia "título. badge. subtítulo" (`whereType<String>()`, no la
+  sintaxis `?elemento` de Dart 3.8).
+- **Fase 6 — campo de nombre de equipo** (Charadas) con 13 px de padding vertical → 48 px de alto.
+- **Fase 6 — marcador:** con 2 participantes el podio dibuja solo plata y oro centrados
+  (`FractionallySizedBox` de 2/3, cada columna mantiene su tercio); el confeti se limita al 18 % lateral y
+  baja a 60 % de opacidad para no competir con el título (RNF legible a distancia).
+- **Fase 6 — tests:** `test/full_flow_test.dart` recorre home → config (baja rondas con el stepper) → partida →
+  marcador → revancha (verifica que conserva "Ronda 1/1") → marcador → catálogo, solo con toques.
+- **Fase 6 — capturas:** `docs/screenshots/01…10-*.png` (390 × 844 a 1.5x, optimizadas) y `overview.png`
+  para la cabecera del README. Se regeneran con el procedimiento de verificación web de arriba.
+- **Fase 6 — README** reorganizado por temas (requerimientos ↔ dónde se cumplen, stack y por qué, estructura,
+  diseño, rutas, estado, cómo agregar un juego, tests, accesibilidad, changelog).
 - Se respeta la regla "nunca todo en mayúsculas" de DESIGN.md aunque algunos `code.html` usen `uppercase`
   en etiquetas de sección (`SectionHeader` no las pasa a mayúsculas).
 
-## Pendientes / notas para la siguiente sesión
-- **Fase 6:** test de flujo completo home → configurar → partida → resultados → revancha / catálogo (hoy hay
-  tramos sueltos: `app_test` llega a la partida y los tests de cada partida y del marcador cubren el resto).
-- Revisión visual de **todas** las rutas contra `design/stitch/*/screen.png` (las de partida y resultados ya
-  se compararon en las fases 4 y 5) y capturas finales en `docs/screenshots/` para el README.
-- Accesibilidad: varios botones de icono (pausa, campana) solo tienen `semanticLabel` vía `ChunkyPressable`;
-  revisar áreas táctiles ≥ 48 px (el botón de pausa de Charadas mide 32 px) y contraste de textos sobre vino.
-- README final completo (ver `docs/fases/fase-6.md`): hoy tiene "Novedades" por fase; reorganizarlo en
-  secciones temáticas (navegación y rutas, gestión de estado, cómo agregar un juego…).
-- Los ajustes (sonido, vibración, pantalla encendida) y los gestos de Charadas son decorativos.
+## Pendientes / siguiente etapa (lógica real de juego)
+El plan del front (fases 0–6) está completo. Lo que queda fuera de su alcance, por prioridad sugerida:
+1. **Persistencia local** (p. ej. `shared_preferences` o `hive`): hoy la configuración, los ajustes y el último
+   marcador viven en memoria y se pierden al cerrar la app. Los `Notifier` ya centralizan el estado: basta con
+   cargar en `build()` y guardar al cambiar.
+2. **Contenido real**: reemplazar `mock_game_content.dart` por JSON en `assets/` (cientos de cartas/preguntas por
+   mazo), barajado aleatorio y sin repetir; el "Mazo personalizado rápido" de Charadas sigue mostrando "llegan pronto".
+3. **Lógica de juego real**: impostores aleatorios (hoy `mockImpostors` es determinista), fase secreta de pasar el
+   móvil jugador por jugador, votación individual, Trivia con pulsador real y rondas completas.
+4. **Sensores y feedback**: giroscopio para "Arriba: Pasar / Abajo: Acierto" en Charadas (`sensors_plus`),
+   vibración (`HapticFeedback`), sonidos y `wakelock` para "pantalla siempre encendida" (hoy los ajustes son mock).
+5. **Pruebas en dispositivo**: el contenedor no tiene emulador; validar en Android real el arranque < 3 s, el
+   rendimiento de las animaciones y el texto grande del sistema (`textScaler`).
+6. **Ilustraciones**: los avatares e imágenes del mockup (no descargables desde el entorno) siguen como
+   emoji/iconos; se pueden agregar como PNG en `assets/images/`.

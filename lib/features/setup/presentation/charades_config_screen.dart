@@ -339,7 +339,8 @@ class _TeamNameCardState extends State<_TeamNameCard> {
               filled: true,
               fillColor: AppColors.surfaceContainerLowest,
               contentPadding:
-                  EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  // 13 px arriba/abajo: el campo llega a 48 px de alto.
+                  EdgeInsets.symmetric(horizontal: 14, vertical: 13),
               border: OutlineInputBorder(
                 borderRadius: AppRadius.pill,
                 borderSide: BorderSide.none,

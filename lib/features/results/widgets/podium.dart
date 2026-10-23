@@ -8,8 +8,8 @@ import '../../games/domain/match_result.dart';
 /// Podio de los 3 primeros (mockup `resultados`): 2.º a la izquierda, 1.º al
 /// centro y más alto en vino, 3.º a la derecha.
 ///
-/// Recibe los puntajes ya ordenados. Si solo hay 2 participantes (dos
-/// equipos), el escalón del bronce queda vacío.
+/// Recibe los puntajes ya ordenados. Con 2 participantes (dos equipos) se
+/// dibujan solo plata y oro, centrados y con el mismo ancho de columna.
 class Podium extends StatelessWidget {
   const Podium({super.key, required this.scores});
 
@@ -27,17 +27,33 @@ class Podium extends StatelessWidget {
               : const SizedBox.shrink(),
         );
 
+    final withBronze = scores.length >= 3;
+
     // Orden visual 2-1-3; `crossAxisAlignment.end` alinea los escalones
     // por la base, como un podio real.
-    return Row(
+    final podium = Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        slot(2),
-        const SizedBox(width: AppSpacing.xs),
+        if (scores.length >= 2) ...[
+          slot(2),
+          const SizedBox(width: AppSpacing.xs),
+        ],
         slot(1),
-        const SizedBox(width: AppSpacing.xs),
-        slot(3),
+        if (withBronze) ...[
+          const SizedBox(width: AppSpacing.xs),
+          slot(3),
+        ],
       ],
+    );
+
+    // Con menos de 3 puestos, cada columna conserva su tercio de ancho y el
+    // conjunto queda centrado (un solo puesto: un tercio al centro).
+    if (withBronze) return podium;
+    return Center(
+      child: FractionallySizedBox(
+        widthFactor: scores.length == 2 ? 2 / 3 : 1 / 3,
+        child: podium,
+      ),
     );
   }
 
