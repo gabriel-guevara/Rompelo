@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-tertiary-container": "#4c483c", "tertiary-fixed-dim": "#cdc6b6", "surface-container-lowest": "#ffffff", "surface-tint": "#3b608c", "on-surface": "#1d192c", "surface-variant": "#e7dff9", "surface": "#fdf7ff", "on-background": "#1d192c", "tertiary-container": "#beb7a8", "outline-variant": "#c3c6d0", "on-secondary-fixed-variant": "#920400", "on-tertiary-fixed-variant": "#4b473a", "secondary-container": "#fd5842", "on-primary-fixed-variant": "#204873", "on-error-container": "#93000a", "tertiary": "#635e51", "on-primary": "#ffffff", "primary-fixed-dim": "#a4c9fb", "secondary-fixed": "#ffdad4", "on-tertiary": "#ffffff", "inverse-primary": "#a4c9fb", "on-surface-variant": "#42474e", "surface-container-highest": "#e7dff9", "surface-bright": "#fdf7ff", "on-tertiary-fixed": "#1e1b11", "surface-container": "#f2ebff", "tertiary-fixed": "#e9e2d1", "error-container": "#ffdad6", "secondary-fixed-dim": "#ffb4a8", "outline": "#73777f", "primary-container": "#95baeb", "on-primary-fixed": "#001c37", "inverse-surface": "#322e42", "on-secondary-container": "#5b0200", "surface-container-low": "#f7f1ff", "inverse-on-surface": "#f5eeff", "error": "#ba1a1a", "surface-dim": "#ded6f1", "surface-container-high": "#ece4ff", "on-secondary-fixed": "#410100", "primary-fixed": "#d2e4ff", "primary": "#3b608c", "on-error": "#ffffff", "secondary": "#b62416", "background": "#fdf7ff", "on-primary-container": "#224a75", "on-secondary": "#ffffff" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": { "space-sm": "0.75rem", "space-md": "1rem", "space-lg": "1.5rem", "margin": "1.25rem", "space-xl": "2.25rem", "gutter": "1rem", "space-xs": "0.375rem" }, "fontFamily": { "label-md": ["Outfit"], "body-md": ["Outfit"], "label-sm": ["Outfit"], "headline-sm": ["Outfit"], "headline-md": ["Outfit"], "body-sm": ["Outfit"], "headline-lg": ["Outfit"], "body-lg": ["Outfit"], "headline-xl": ["Outfit"], "headline-xl-mobile": ["Outfit"], "label-lg": ["Outfit"] }, "fontSize": { "label-md": ["14px", { "lineHeight": "18px", "fontWeight": "600" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }], "headline-sm": ["19px", { "lineHeight": "25px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "500" }], "headline-xl": ["40px", { "lineHeight": "46px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "headline-xl-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.025em", "fontWeight": "800" }], "label-lg": ["16px", { "lineHeight": "22px", "fontWeight": "700" }] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-xs"><div class="flex items-center gap-1"><span class="font-headline-md text-headline-md tracking-tight text-on-surface font-extrabold">Rómpelo</span><span class="material-symbols-outlined text-secondary text-[20px]">auto_awesome</span></div><span class="sr-only">Marcador</span></div><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-28 px-margin bg-surface flex-grow"><div class="flex flex-col w-full max-w-[540px] mx-auto gap-space-lg relative select-none">
+<!-- Dynamic Confetti Background Canvas for pure celebration joy -->
+<canvas class="pointer-events-none absolute inset-0 z-0 w-full h-full" id="confetti-canvas"></canvas>
+<!-- Title & Celebration Headline -->
+<section class="relative z-10 flex flex-col items-center text-center px-space-xs">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm shadow-sm mb-2">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">celebration</span>
+<span>Fin del juego</span>
+</div>
+<h1 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface font-extrabold tracking-tight">
+      ¡Partida finalizada!
+    </h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 font-medium">
+      Risas garantizadas • 3 rondas intensas
+    </p>
+</section>
+<!-- Interactive Podium Display -->
+<section class="relative z-10 w-full pt-4 pb-2 px-space-xs">
+<div class="grid grid-cols-3 items-end gap-2 sm:gap-3">
+<!-- 2ND PLACE (Izquierda) -->
+<div class="flex flex-col items-center order-1 group cursor-pointer transition-transform duration-200 active:scale-95" onclick="triggerCheer('Team Burbujas', '🥈')">
+<!-- Floating Avatar -->
+<div class="relative mb-2">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest p-1 shadow-md flex items-center justify-center relative">
+<img class="w-full h-full object-cover rounded-full" data-alt="Playful 3D cartoon avatar of a cheerful young woman wearing turquoise party glasses with glitter, smiling broadly in a vibrant festive modern style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClPbJlhF4w276VkmFCEuaQY32slj9eK2ocQTvQzxE3F6fy1KlbUnxt5lYIlWKdD52g5rwBfE5x6tGtxkKRkrPrUVihUxkBr_mOp1GfLv2HK8vquu1U3BQ6DpG2HqkaCzKg8RLDUpGn7O2Yo_6affXx3TFwRrYqMT3ylwnR2uN9ydaywBtYGP6_feRtmmphzfctdldKe8r_Dj-X3UpIwK47jj3R9_6GADiLTl0Wizo0d_v2pnczuZXxeQ"/>
+<div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-surface-container-lowest flex items-center justify-center text-on-surface shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary">military_tech</span>
+</div>
+</div>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface text-center leading-tight truncate w-full px-1">Burbujas</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">720 pts</span>
+<!-- 2nd Step Block -->
+<div class="w-full h-28 mt-2 rounded-t-3xl bg-surface-container flex flex-col items-center justify-start pt-3 shadow-[0_5px_0_0_#ded6f1]">
+<span class="w-8 h-8 rounded-full bg-surface-container-lowest text-tertiary font-headline-md text-headline-md flex items-center justify-center shadow-sm font-bold">2</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Plata</span>
+</div>
+</div>
+<!-- 1ST PLACE (Centro - El más alto y llamativo) -->
+<div class="flex flex-col items-center order-2 -mt-6 group cursor-pointer transition-transform duration-200 active:scale-95" onclick="triggerCheer('Team Vino', '👑')">
+<!-- Crown & Badge -->
+<div class="relative mb-2 flex flex-col items-center">
+<span class="material-symbols-outlined text-secondary-container text-[32px] -mb-1 animate-bounce" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+<div class="w-20 h-20 rounded-full bg-secondary-fixed p-1.5 shadow-xl flex items-center justify-center relative">
+<img class="w-full h-full object-cover rounded-full" data-alt="Vibrant 3D character illustration of an energetic laughing man with confetti in his hair and party sunglasses, surrounded by warm ambient celebration lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSm9YR3On_YuXig88GkGz9JmcEcxaPz8A51N6alY37yxbcYzlcicoMWgnEKb3AoXrq4CRAPK-vI24_4eLc0N1OueeOrLC65sfPV9q-k6zd8Vo17zpMqaj78j1xapj7Kzc5HNhD-btj86bU94-tNTbx7ngJ6xybVgpgQOoohStgSjaB9YLHsAmSq-gisRMOT8jf5Ozc4NhsPNZv-w-2-nOz8rJ7y774Kfj4cetU5haqvBcdXCYVHapvGA"/>
+<div class="absolute -bottom-2 px-2 py-0.5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm shadow-md font-bold flex items-center gap-0.5">
+<span>#1</span>
+</div>
+</div>
+</div>
+<span class="font-headline-md text-headline-md text-secondary font-black text-center leading-tight truncate w-full px-1">Team Vino</span>
+<span class="font-label-lg text-label-lg text-secondary font-bold">850 pts</span>
+<!-- 1st Step Block (Wine Identity Accent) -->
+<div class="w-full h-40 mt-2 rounded-t-3xl bg-secondary text-on-secondary flex flex-col items-center justify-start pt-3 shadow-[0_6px_0_0_#5c0200] relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-secondary-container/20 pointer-events-none"></div>
+<span class="w-10 h-10 rounded-full bg-surface-container-lowest text-secondary font-headline-lg text-headline-lg flex items-center justify-center shadow-md font-extrabold">1</span>
+<span class="font-label-md text-label-md uppercase tracking-wider text-secondary-fixed mt-1 font-bold">¡Campeones!</span>
+</div>
+</div>
+<!-- 3RD PLACE (Derecha) -->
+<div class="flex flex-col items-center order-3 group cursor-pointer transition-transform duration-200 active:scale-95" onclick="triggerCheer('Los Despistados', '🥉')">
+<!-- Floating Avatar -->
+<div class="relative mb-2">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest p-1 shadow-md flex items-center justify-center relative">
+<img class="w-full h-full object-cover rounded-full" data-alt="Charming 3D stylized character portrait of a goofy, joyful friend with curly hair and paper streamer party hat smiling playfully" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHTvS7xbmE4TsoUuqe2O_E6qApsPq-wJ_evc6xfn0Ulr0SzGCotT_5nISxEod6TXQr0FwbOxnFt-rSAC83RoU2xk1vvPk5K-uqG5_KyhDKgGf2xExqNwnWPs5Yd6SbzYIHHu0N26tSxP97JBnDq5KVIjJrHg7y4YcTjHXc1q2TY5wzIjIKSQoEeuM9uBSWAW5RjYd4RuhfnE2S06AODvR3yUMuRcq_idWX1al6MZlKBY60dx391yByBw"/>
+<div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-surface-container-lowest flex items-center justify-center text-on-surface shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim">workspace_premium</span>
+</div>
+</div>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface text-center leading-tight truncate w-full px-1">Despistados</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">490 pts</span>
+<!-- 3rd Step Block -->
+<div class="w-full h-20 mt-2 rounded-t-3xl bg-surface-container flex flex-col items-center justify-start pt-2 shadow-[0_5px_0_0_#ded6f1]">
+<span class="w-7 h-7 rounded-full bg-surface-container-lowest text-on-surface-variant font-headline-sm text-headline-sm flex items-center justify-center shadow-sm font-bold">3</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Bronce</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Hall of Fame & Quirky Honors Section -->
+<section class="relative z-10 flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[20px]">stars</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-extrabold">Premios de la noche</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">Momentos clave</span>
+</div>
+<!-- Award Card 1: Farsante -->
+<div class="w-full bg-surface-container-lowest p-space-md rounded-3xl shadow-[0_4px_0_0_rgba(31,27,46,0.08)] flex items-center justify-between gap-space-md transition-transform active:scale-[0.98]">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-12 h-12 rounded-2xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 shadow-[0_3px_0_0_#6f97ce]">
+<span class="material-symbols-outlined text-[24px]">theater_comedy</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-bold truncate">El mejor farsante</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Impostor sin ser descubierto</span>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<div class="flex flex-col text-right">
+<span class="font-label-lg text-label-lg text-primary font-extrabold">Mateo</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Voto unánime</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden p-0.5 shrink-0">
+<img class="w-full h-full object-cover rounded-full" data-alt="Playful close-up portrait of Mateo smiling smugly with playful wink, rendered in 3D stylized cute avatar style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDn7jJnmCFDqvUDDaTpYpDL4GsSA0BIj4-FRBeVdfVtMZ-baEzePeP52ovj0YL03kwDvCo_brmd4h_7pTFTlTQ8QHmOAAmz2_v4a1xmh072MEeCrrXchsoMxnm1mXOuU6GG2hT_pNsbrpJPBvRKgPqIvdzXTe0wmJojVSOXn_KSQaQfFyDMsde_QIgGUOfzfdM8KZg_aYfSDUdxDnkezp3Ff05VqiK9bsb4PiI9qJUtQxYAZ5XheTtUA"/>
+</div>
+</div>
+</div>
+<!-- Award Card 2: Reflejos Ninja -->
+<div class="w-full bg-surface-container-lowest p-space-md rounded-3xl shadow-[0_4px_0_0_rgba(31,27,46,0.08)] flex items-center justify-between gap-space-md transition-transform active:scale-[0.98]">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-12 h-12 rounded-2xl bg-secondary-fixed text-on-secondary-fixed-variant flex items-center justify-center shrink-0 shadow-[0_3px_0_0_#ffb4a8]">
+<span class="material-symbols-outlined text-[24px]">bolt</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-bold truncate">Récord de reflejos</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Trivia resuelta en 1.2 seg</span>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<div class="flex flex-col text-right">
+<span class="font-label-lg text-label-lg text-secondary font-extrabold">Clara</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Velocidad luz</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden p-0.5 shrink-0">
+<img class="w-full h-full object-cover rounded-full" data-alt="Stylized portrait avatar of Clara smiling happily with energetic expression and round glasses in vibrant modern party lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCU_5ADjKjd5Ze1iTzkV1p6CpJRES-5k35xvVDp7vQx-DwBk3WGs-J6eiy48crzCFx2JWV9Q60IeEWKMoyCZt61XmD-uiX5J2AoOlcymWZWNR9cNgflCIaNlBvnL8pDXbbnvM8fKNEGpjeBcMdKPBblKWc2ChsO7uSWZO9QTOA36a26VafWiqKPsfvw7SXoYCuqMDyDMUOQnWNJimKwEsjBLFGtcq2KLHrTtevdtwhMEPdeuQcdBJdWYg"/>
+</div>
+</div>
+</div>
+<!-- Award Card 3: Mímica Confusa -->
+<div class="w-full bg-surface-container-lowest p-space-md rounded-3xl shadow-[0_4px_0_0_rgba(31,27,46,0.08)] flex items-center justify-between gap-space-md transition-transform active:scale-[0.98]">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0 shadow-[0_3px_0_0_#cdc6b6]">
+<span class="material-symbols-outlined text-[24px]">gesture</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-bold truncate">Mímica más confusa</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">¿Un perro o una tostadora?</span>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<div class="flex flex-col text-right">
+<span class="font-label-lg text-label-lg text-on-surface font-extrabold">Sofía</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">El mayor misterio</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden p-0.5 shrink-0">
+<img class="w-full h-full object-cover rounded-full" data-alt="Playful portrait avatar of Sofia laughing with hand on cheek, expressive 3D character design for casual games" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-AA-ucCEe4_hii8xWNDQP8Xm0TCrGoKKE7sc2EPPY-z87CTW9iAEu12NrXnIH4e_O9xhaiBoqdHggbA1FXNwkuFM5TTancqkXeuzmuBxygy3avuSK_07BWknHi74tnQN8r8ZQ2c6K6pElVapdPFASgrAPF_Imo3yprWCU9snej510vX7Mr3sH0HbDk_Nge--me4mqRstzbWHcYM523eiNSnCiW72-OMXO1FdU5Ew6xQyg7N2d6ec2Vg"/>
+</div>
+</div>
+</div>
+</section>
+<!-- High-Energy Social Stats Mini Bento -->
+<section class="relative z-10 grid grid-cols-2 gap-space-sm">
+<div class="bg-surface-container-low p-space-md rounded-2xl flex flex-col justify-between shadow-[0_3px_0_0_rgba(31,27,46,0.06)]">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">Gritos y risas</span>
+<span class="material-symbols-outlined text-secondary text-[20px]">mic</span>
+</div>
+<div class="mt-2">
+<span class="font-headline-lg text-headline-lg text-on-surface font-black">94 dB</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Vecinos alertados</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-2xl flex flex-col justify-between shadow-[0_3px_0_0_rgba(31,27,46,0.06)]">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">Tarjetas jugadas</span>
+<span class="material-symbols-outlined text-primary text-[20px]">style</span>
+</div>
+<div class="mt-2">
+<span class="font-headline-lg text-headline-lg text-on-surface font-black">42</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">En 18 minutos</p>
+</div>
+</div>
+</section>
+<!-- Big Chunky Primary Action Zone -->
+<section class="relative z-10 flex flex-col gap-space-sm pt-2">
+<!-- Immediate Rematch: Chunky Wine Tactile Button -->
+<button class="w-full min-h-[58px] px-space-lg rounded-full bg-secondary text-on-secondary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-[0_6px_0_0_#5c0200] transition-all active:translate-y-1 active:shadow-[0_1px_0_0_#5c0200]" id="rematch-btn" type="button">
+<span class="material-symbols-outlined text-[22px]">replay</span>
+<span>¡Jugar revancha inmediata!</span>
+</button>
+<!-- Return to Catalog Soft Button -->
+<button class="w-full min-h-[52px] px-space-lg rounded-full bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 shadow-[0_4px_0_0_#ded6f1] transition-all active:translate-y-1 active:shadow-[0_1px_0_0_#ded6f1]" type="button">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">grid_view</span>
+<span>Volver al catálogo de juegos</span>
+</button>
+</section>
+<!-- Toast Notification Overlay for micro-moments -->
+<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform scale-90 px-4 py-2.5 rounded-full bg-inverse-surface text-inverse-on-surface shadow-2xl flex items-center gap-2 font-label-md text-label-md" id="toast">
+<span class="text-[18px]" id="toast-icon">✨</span>
+<span id="toast-msg">¡Aplausos al podio!</span>
+</div>
+</div>
+<script>
+  // Highlight the "Marcador" bottom navigation item per specifications
+  (function activateScoreboardTab() {
+    const navLinks = document.querySelectorAll('nav[data-active-classes] a');
+    navLinks.forEach(link => {
+      const isMarcador = link.getAttribute('data-path') === 'marcador';
+      if (isMarcador) {
+        link.classList.remove('text-on-surface-variant');
+        link.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-[0_3px_0_0_#6f97ce]');
+      } else {
+        link.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-[0_3px_0_0_#6f97ce]');
+        link.classList.add('text-on-surface-variant');
+      }
+    });
+  })();
+
+  // Toast feedback micro-interaction
+  function triggerCheer(teamName, emoji) {
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toast-msg');
+    const toastIcon = document.getElementById('toast-icon');
+    
+    toastMsg.textContent = '¡Festejando a ' + teamName + '!';
+    toastIcon.textContent = emoji;
+    
+    toast.classList.remove('opacity-0', 'scale-90');
+    toast.classList.add('opacity-100', 'scale-100');
+    
+    createBurstConfetti();
+
+    setTimeout(() => {
+      toast.classList.add('opacity-0', 'scale-90');
+      toast.classList.remove('opacity-100', 'scale-100');
+    }, 2200);
+  }
+
+  // Tactile audio-feel & confetti burst for Rematch button
+  const rematchBtn = document.getElementById('rematch-btn');
+  if (rematchBtn) {
+    rematchBtn.addEventListener('click', () => {
+      triggerCheer('Nueva Batalla', '🔥');
+    });
+  }
+
+  // Gentle floating confetti canvas implementation
+  const canvas = document.getElementById('confetti-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    const colors = ['#930400', '#95baeb', '#fd5842', '#ffdad4', '#3b608c'];
+
+    function resize() {
+      width = canvas.parentElement.offsetWidth;
+      height = canvas.parentElement.offsetHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function createBurstConfetti() {
+      for (let i = 0; i < 28; i++) {
+        particles.push({
+          x: width / 2 + (Math.random() - 0.5) * 160,
+          y: height * 0.25 + (Math.random() - 0.5) * 80,
+          w: Math.random() * 8 + 4,
+          h: Math.random() * 6 + 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vx: (Math.random() - 0.5) * 8,
+          vy: Math.random() * -6 - 2,
+          gravity: 0.22,
+          rotation: Math.random() * 360,
+          vRot: (Math.random() - 0.5) * 10,
+          opacity: 1
+        });
+      }
+    }
+
+    // Initial celebratory ambient particles
+    for (let i = 0; i < 35; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height * 0.7,
+        w: Math.random() * 7 + 4,
+        h: Math.random() * 6 + 3,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: Math.random() * 1.5 + 0.5,
+        gravity: 0.04,
+        rotation: Math.random() * 360,
+        vRot: (Math.random() - 0.5) * 4,
+        opacity: Math.random() * 0.8 + 0.2
+      });
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.rotation += p.vRot;
+
+        ctx.save();
+        ctx.globalAlpha = p.opacity;
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+
+        // Fade burst particles or wrap ambient ones
+        if (p.opacity < 1 && p.y > height) {
+          p.y = -10;
+          p.x = Math.random() * width;
+          p.vy = Math.random() * 1.5 + 0.5;
+        } else if (p.y > height) {
+          particles.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(render);
+    }
+    render();
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.05)]" data-active-classes="bg-primary-container text-on-primary-container shadow-[0_3px_0_0_#6f97ce]"><div class="flex justify-around items-center h-20 px-space-sm max-w-[540px] mx-auto"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[50px] px-space-xs py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all" data-path="explorar" href="#"><span class="material-symbols-outlined text-[24px]">sports_esports</span><span class="font-label-sm text-label-sm mt-0.5">Explorar</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[50px] px-space-xs py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all" data-path="configurar" href="#"><span class="material-symbols-outlined text-[24px]">tune</span><span class="font-label-sm text-label-sm mt-0.5">Configurar</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[50px] px-space-xs py-1 rounded-full transition-all bg-primary-container text-on-primary-container shadow-[0_3px_0_0_#6f97ce]" data-path="marcador" href="#"><span class="material-symbols-outlined text-[24px]">trophy</span><span class="font-label-sm text-label-sm mt-0.5">Marcador</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[50px] px-space-xs py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all" data-path="ajustes" href="#"><span class="material-symbols-outlined text-[24px]">settings</span><span class="font-label-sm text-label-sm mt-0.5">Ajustes</span></a></div></nav></body></html>
