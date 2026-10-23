@@ -15,6 +15,7 @@ enum GameAccent {
     iconColor: AppColors.secondary,
     ctaColor: AppColors.secondary,
     ctaShadow: AppColors.shadowWine,
+    cardBorder: AppColors.surfaceContainerHighest,
   ),
 
   /// Azul cielo (Impostor).
@@ -24,6 +25,7 @@ enum GameAccent {
     iconColor: AppColors.primary,
     ctaColor: AppColors.primary,
     ctaShadow: AppColors.shadowPrimary,
+    cardBorder: AppColors.primaryFixed,
   ),
 
   /// Neutro cálido con CTA vino (Trivia).
@@ -33,6 +35,7 @@ enum GameAccent {
     iconColor: AppColors.secondary,
     ctaColor: AppColors.secondary,
     ctaShadow: AppColors.shadowWine,
+    cardBorder: AppColors.surfaceContainerHighest,
   );
 
   const GameAccent({
@@ -41,6 +44,7 @@ enum GameAccent {
     required this.iconColor,
     required this.ctaColor,
     required this.ctaShadow,
+    required this.cardBorder,
   });
 
   final Color tagBackground;
@@ -48,6 +52,28 @@ enum GameAccent {
   final Color iconColor;
   final Color ctaColor;
   final Color ctaShadow;
+
+  /// Borde de la GameCard (el Impostor lo lleva azul en el mockup).
+  final Color cardBorder;
+}
+
+/// "Vibra" de un juego: los filtros de "Explora por vibra" del home.
+///
+/// Es un enum (y no strings sueltos) para que el compilador avise si un
+/// juego usa una vibra que no existe, igual que un `union type` en TS.
+enum GameVibe {
+  fiesta('🎉', 'Fiesta total'),
+  misterio('🕵️', 'Misterio'),
+  reflejos('⚡', 'Reflejos rápidos'),
+  chill('🍷', 'Chill con amigos');
+
+  const GameVibe(this.emoji, this.label);
+
+  final String emoji;
+  final String label;
+
+  /// Texto del chip: "🎉 Fiesta total".
+  String get chipLabel => '$emoji $label';
 }
 
 /// Etiqueta corta de un juego (mazos o mecánicas destacadas en la tarjeta).
@@ -74,6 +100,7 @@ class GameItem {
     required this.chips,
     required this.accent,
     required this.ctaIcon,
+    required this.vibes,
   });
 
   /// Identificador estable; también es el segmento `:juego` de las rutas.
@@ -94,6 +121,13 @@ class GameItem {
 
   /// Icono del botón "Configurar y jugar".
   final IconData ctaIcon;
+
+  /// Vibras con las que aparece al filtrar el home.
+  final Set<GameVibe> vibes;
+
+  /// `true` si el grupo actual cabe en el rango de jugadores del juego.
+  bool fitsPlayers(int players) =>
+      players >= minPlayers && players <= maxPlayers;
 
   /// Texto "10 min • 3-12 pers" del mockup.
   String get metaLabel => '$durationMinutes min • $minPlayers-$maxPlayers pers';

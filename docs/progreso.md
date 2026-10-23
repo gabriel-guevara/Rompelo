@@ -7,7 +7,7 @@
 |---|---|---|---|
 | 0 — Plan y documentación | ✅ Hecha | *(ver `git log`)* | Mockup en `design/stitch/`, plan, fichas, README base |
 | 1 — Entorno y fundaciones | ✅ Hecha | `da737ad` | Tema, router con 4 tabs, widgets core, catálogo, tests |
-| 2 — Home / Explorar | ⏳ Pendiente | | |
+| 2 — Home / Explorar | ✅ Hecha | *(ver `git log`: "feat: Fase 2")* | Home real, MagicPickerCard, GameCard, filtro por vibra, `playerCountProvider` |
 | 3 — Configuraciones | ⏳ Pendiente | | |
 | 4 — Pantallas en partida | ⏳ Pendiente | | |
 | 5 — Resultados y tabs | ⏳ Pendiente | | |
@@ -59,16 +59,39 @@ Al terminar: `rm -rf web build test/widget_test.dart && git checkout -- .metadat
   (wine = Charadas, sky = Impostor, warm = Trivia con CTA vino).
 - **Fase 1 — `PlaceholderScreen`:** pantalla temporal reutilizada por todas las rutas aún sin UI.
   El home temporal incluye una vitrina de los widgets core (se elimina en la Fase 2).
+- **Fase 2 — widgets del catálogo** en `lib/features/catalog/widgets/` (`game_card.dart`, `magic_picker_card.dart`),
+  hermanos de `presentation/` como indica el árbol del plan. Son presentacionales: reciben datos y callbacks,
+  la navegación y el provider los maneja `HomeScreen`.
+- **Fase 2 — `GameVibe`** (enum con emoji + label) y `GameItem.vibes: Set<GameVibe>`. Asignación:
+  Charadas = fiesta + chill, Impostor = misterio + chill, Trivia = reflejos + fiesta. Toda vibra tiene al
+  menos un juego (hay test); igual existe un mensaje de "sin juegos" por si se agrega una vibra vacía.
+- **Fase 2 — `playerCountProvider`** (`NotifierProvider<PlayerCountNotifier, int>`, 2–24, inicial 6) en
+  `features/setup/providers/player_count_provider.dart`. Es el primer estado global de Riverpod.
+- **Fase 2 — estado local vs global:** la vibra filtrada y la mesa son `setState` en `HomeScreen` (solo
+  importan ahí). La **mesa es decorativa** (hoja inferior Mesa 1–8, no se usa en otra pantalla).
+- **Fase 2 — azar:** `pickRandomGame` sortea entre los juegos cuyo rango de jugadores incluye al grupo (si
+  ninguno cabe, entre todos), muestra un SnackBar "¡Tocó …!" y navega a `/configurar/<juego>`. Recibe un
+  `Random` inyectable para tests deterministas.
+- **Fase 2 — `RompeloAvatar`** ahora es público para que las pantallas que pasan `actions` al app bar
+  (el home pasa campana + avatar) puedan conservarlo.
+- **Fase 2 — `PillChip` estático** envuelve el texto en `Flexible` (puede pasar a 2 líneas, como "Actuación &
+  risas" en el mockup) para no desbordar en pantallas angostas o con texto grande. Los chips interactivos no,
+  porque viven en carruseles horizontales sin ancho máximo.
+- **Fase 2 — stepper del selector mágico** con acento azul (`AppColors.primary`) en vez de vino: en el mockup
+  ambos botones son neutros; se mantuvo el patrón de `CounterStepper` ("+" de color) con el azul de la tarjeta.
+- **Fase 2 — tests de widgets a 800 × 2400 px:** la fuente de test (Ahem) dibuja cada letra de 1 em y
+  desborda la bottom nav a 390 px aunque en el dispositivo cabe; el ancho móvil se valida con capturas web.
+  En `app_test.dart` (800 × 600) la lista es perezosa: hay que `scrollUntilVisible` + `ensureVisible`
+  antes de tocar "Configurar y jugar".
 - Se respeta la regla "nunca todo en mayúsculas" de DESIGN.md aunque algunos `code.html` usen `uppercase`
   en etiquetas de sección (`SectionHeader` no las pasa a mayúsculas).
 
 ## Pendientes / notas para la siguiente sesión
-- **Fase 2** reemplaza el contenido de `features/catalog/presentation/home_screen.dart` (hoy placeholder +
-  vitrina). Ajustar `test/app_test.dart`, que hoy usa los textos del placeholder ("¿Qué jugamos hoy?" se
-  mantiene; el tap en "Charadas alocadas" debe pasar a "Configurar y jugar" de la GameCard, y
-  "Empezar partida" es el CTA del placeholder de configuración).
-- Para el filtro "Explora por vibra" falta un campo en `GameItem` (p. ej. `vibes: Set<GameVibe>`).
-- `RompeloAppBar` acepta `actions`: la campana del mockup `home` se agrega en la Fase 2.
-- Aún no hay providers de estado de partida (Riverpod solo provee el router); el número de jugadores del
-  selector mágico (Fase 2) será el primero.
+- **Fase 3**: las pantallas de configuración deben tomar el valor inicial de jugadores de
+  `ref.read(playerCountProvider)` (y, si se cambia en la config, decidir si se sincroniza de vuelta).
+  `match_setup_provider.dart` puede convivir con `player_count_provider.dart` en `features/setup/providers/`.
+- Al reemplazar `GameConfigPlaceholderScreen`, actualizar los tests que tocan "Empezar partida"
+  (`test/app_test.dart` y `test/features/catalog/home_screen_test.dart`): el CTA real de cada juego es
+  "¡Empezar a actuar!", "¡Calentar pulsadores y jugar!" y "Repartir identidades secretas".
+- La campana del home solo muestra un SnackBar (no hay notificaciones reales).
 - Widgets que el plan pone en fases posteriores: `LiveGameTopBar` y `TimerBar` (Fase 4).

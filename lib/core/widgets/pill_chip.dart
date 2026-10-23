@@ -47,7 +47,8 @@ class PillChip extends StatelessWidget {
               ? Border.all(color: AppColors.surfaceContainerHigh)
               : null,
         ),
-        child: _content(textTheme.labelSmall?.copyWith(color: fg), fg, 15),
+        child: _content(textTheme.labelSmall?.copyWith(color: fg), fg, 15,
+            wrapText: true),
       );
     }
 
@@ -84,7 +85,13 @@ class PillChip extends StatelessWidget {
     );
   }
 
-  Widget _content(TextStyle? style, Color fg, double iconSize) {
+  /// [wrapText] deja que la etiqueta pase a una segunda línea si no cabe
+  /// (chips estáticos dentro de un `Wrap`). Los interactivos no lo usan:
+  /// viven en carruseles horizontales, donde el ancho no tiene límite y un
+  /// `Flexible` no tendría contra qué medirse.
+  Widget _content(TextStyle? style, Color fg, double iconSize,
+      {bool wrapText = false}) {
+    final text = Text(label, style: style);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -92,7 +99,7 @@ class PillChip extends StatelessWidget {
           Icon(icon, size: iconSize, color: selected ? fg : (iconColor ?? fg)),
           const SizedBox(width: 4),
         ],
-        Text(label, style: style),
+        if (wrapText) Flexible(child: text) else text,
       ],
     );
   }

@@ -15,7 +15,8 @@ class RompeloAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   final String subtitle;
 
-  /// Si es `null` se muestran las acciones por defecto (avatar decorativo).
+  /// Si es `null` se muestran las acciones por defecto (avatar decorativo);
+  /// quien pase las suyas puede reutilizar [RompeloAvatar].
   final List<Widget>? actions;
 
   static const double _height = 64;
@@ -68,7 +69,7 @@ class RompeloAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
-              ...(actions ?? const [_Avatar()]),
+              ...(actions ?? const [RompeloAvatar()]),
             ],
           ),
         ),
@@ -78,8 +79,8 @@ class RompeloAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 /// Avatar decorativo (la app no tiene usuarios: es un solo dispositivo).
-class _Avatar extends StatelessWidget {
-  const _Avatar();
+class RompeloAvatar extends StatelessWidget {
+  const RompeloAvatar({super.key});
 
   @override
   Widget build(BuildContext context) {

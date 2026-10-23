@@ -25,7 +25,7 @@ los juegos funcionan como maquetas navegables con datos de ejemplo.
 |---|---|---|
 | 0 | Mockup en el repo, plan y documentación | ✅ |
 | 1 | Entorno Flutter + fundaciones (tema, router, widgets core) | ✅ |
-| 2 | Home / Explorar | ⏳ |
+| 2 | Home / Explorar | ✅ |
 | 3 | Pantallas de configuración | ⏳ |
 | 4 | Pantallas en partida | ⏳ |
 | 5 | Resultados / podio + tabs | ⏳ |
@@ -47,9 +47,24 @@ El mockup se hizo en Google Stitch y está exportado en [`design/stitch/`](desig
 |---|---|---|
 | Flutter / Dart | 3.47 (stable) / 3.13 | UI nativa |
 | `go_router` | ^17.5.0 | Navegación declarativa con barra inferior (`StatefulShellRoute.indexedStack`) |
-| `flutter_riverpod` | ^3.4.3 | Estado (router como provider; configuración de partida desde la Fase 3) |
+| `flutter_riverpod` | ^3.4.3 | Estado (router como provider, número de jugadores; configuración de partida desde la Fase 3) |
 | Fuente Outfit (TTF variable) | `assets/fonts/` | Tipografía empaquetada, funciona offline |
 | `flutter_lints` | ^6.0.0 | Reglas de estilo para `flutter analyze` |
+
+## Novedades de la Fase 2
+- **Home real** (`features/catalog/presentation/home_screen.dart`) fiel a `design/stitch/home`: header con
+  campana y avatar, "¿Qué jugamos hoy?" con selector de mesa (hoja inferior Mesa 1–8), selector mágico,
+  "Explora por vibra" y las tarjetas de juego. Se eliminó la vitrina temporal de la Fase 1.
+- **`MagicPickerCard`**: tarjeta azul con degradado, `CounterStepper` de jugadores y "¡Elegir juego al azar!",
+  que sortea entre los juegos donde cabe el grupo y navega a su configuración.
+- **`GameCard`**: tag, duración/jugadores, título, descripción, ilustración (icono), chips y CTA
+  "Configurar y jugar" (vino o azul según el juego) → `/configurar/<juego>`.
+- **Filtro por vibra:** nuevo enum `GameVibe` (🎉 Fiesta total, 🕵️ Misterio, ⚡ Reflejos rápidos,
+  🍷 Chill con amigos) y campo `vibes` en `GameItem`; el badge cuenta los juegos visibles.
+- **Primer provider de estado:** `playerCountProvider` (`features/setup/providers/`) guarda los jugadores
+  reunidos (2–24, empieza en 6); la configuración lo usará como valor inicial en la Fase 3.
+- **Tests:** home (3 juegos, navegación, filtro, stepper, azar, mesa), provider de jugadores y funciones del
+  catálogo (`gamesByVibe`, `pickRandomGame`).
 
 ## Novedades de la Fase 1
 - **Tema del mockup:** `AppColors` (tokens de `DESIGN.md`, reemplaza la paleta morada), `AppSpacing`/`AppRadius`

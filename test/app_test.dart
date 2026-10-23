@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rompelo_app/app.dart';
@@ -36,8 +37,18 @@ void main() {
       (tester) async {
     await pumpApp(tester);
 
-    // Explorar → configuración de Charadas → partida.
-    await tester.tap(find.text('Charadas alocadas'));
+    // Explorar → "Configurar y jugar" de Charadas → partida.
+    final charadesCta = find.descendant(
+      of: find.byKey(const ValueKey('game-card-charadas')),
+      matching: find.text('Configurar y jugar'),
+    );
+    // La lista es perezosa: la tarjeta solo existe cuando entra en pantalla.
+    await tester.scrollUntilVisible(charadesCta, 200,
+        scrollable: find.byType(Scrollable).first);
+    // Lo sube al borde superior para que la bottom nav no tape el botón.
+    await tester.ensureVisible(charadesCta);
+    await tester.pumpAndSettle();
+    await tester.tap(charadesCta);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Empezar partida'));
     await tester.pumpAndSettle();
