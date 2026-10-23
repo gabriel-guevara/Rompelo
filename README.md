@@ -24,7 +24,7 @@ los juegos funcionan como maquetas navegables con datos de ejemplo.
 | Fase | Contenido | Estado |
 |---|---|---|
 | 0 | Mockup en el repo, plan y documentación | ✅ |
-| 1 | Entorno Flutter + fundaciones (tema, router, widgets core) | ⏳ |
+| 1 | Entorno Flutter + fundaciones (tema, router, widgets core) | ✅ |
 | 2 | Home / Explorar | ⏳ |
 | 3 | Pantallas de configuración | ⏳ |
 | 4 | Pantallas en partida | ⏳ |
@@ -42,22 +42,42 @@ El mockup se hizo en Google Stitch y está exportado en [`design/stitch/`](desig
 - **Tipografía:** Outfit, en mayúsculas y minúsculas normales (nunca todo en mayúsculas), con cifras tabulares.
 - **Estilo "chunky":** botones pill y tarjetas muy redondeadas con sombra sólida inferior que se hunde al presionar.
 
-## Stack (planeado)
-| Herramienta | Para qué |
-|---|---|
-| Flutter 3 / Dart 3 | UI nativa |
-| `go_router` | Navegación declarativa con barra inferior (`StatefulShellRoute`) |
-| `flutter_riverpod` | Estado de la configuración de partida y marcador |
-| Fuente Outfit empaquetada | Tipografía offline |
+## Stack
+| Herramienta | Versión | Para qué |
+|---|---|---|
+| Flutter / Dart | 3.47 (stable) / 3.13 | UI nativa |
+| `go_router` | ^17.5.0 | Navegación declarativa con barra inferior (`StatefulShellRoute.indexedStack`) |
+| `flutter_riverpod` | ^3.4.3 | Estado (router como provider; configuración de partida desde la Fase 3) |
+| Fuente Outfit (TTF variable) | `assets/fonts/` | Tipografía empaquetada, funciona offline |
+| `flutter_lints` | ^6.0.0 | Reglas de estilo para `flutter analyze` |
+
+## Novedades de la Fase 1
+- **Tema del mockup:** `AppColors` (tokens de `DESIGN.md`, reemplaza la paleta morada), `AppSpacing`/`AppRadius`
+  y `AppTheme` con `ColorScheme` hecho a mano y `TextTheme` Outfit (headline-xl … label-sm, cifras tabulares).
+- **Navegación:** `go_router` con 4 tabs (Explorar `/`, Configurar `/configurar`, Marcador `/resultados`,
+  Ajustes `/ajustes`), `/configurar/:juego` dentro del shell y `/partida/:juego` a pantalla completa.
+  Por ahora las pantallas son *placeholders* navegables.
+- **Widgets core** (`lib/core/widgets/`): `ChunkyButton`, `ChunkyCard`, `PillChip`, `SelectionTile`,
+  `SegmentedPills`, `CounterStepper`, `SectionHeader`, `RompeloAppBar`, `AppShellScaffold` y `PlaceholderScreen`.
+  El home temporal incluye una vitrina con todos ellos.
+- **Catálogo:** `GameItem` salió de `main.dart` a `features/catalog/` con tag, duración, rango de jugadores,
+  chips, color y rutas; los textos son los del mockup.
+- **Tests:** se reemplazó el test roto del contador por tests de arranque/navegación, del `CounterStepper` y
+  del catálogo.
 
 ## Estructura del repositorio
 ```
-lib/                 código de la app (se reorganiza por features en la Fase 1)
-design/stitch/       mockup exportado + DESIGN.md
-docs/plan-front.md   plan maestro del front
-docs/fases/          ficha de cada fase
-docs/progreso.md     registro de avance y decisiones
-test/                tests de widgets
+lib/
+  main.dart · app.dart     arranque (ProviderScope → MaterialApp.router)
+  core/constants/          colores, espaciados y radios
+  core/theme/              AppTheme (ColorScheme + TextTheme Outfit)
+  core/router/             rutas (AppRoutes) y GoRouter con el shell de tabs
+  core/widgets/            componentes del sistema de diseño
+  features/<feature>/      catalog · setup · games · results · settings
+assets/fonts/              Outfit (variable) + licencia OFL
+design/stitch/             mockup exportado + DESIGN.md
+docs/                      plan maestro, fichas de fase y progreso
+test/                      tests de widgets y unitarios
 ```
 
 ## Cómo ejecutar
@@ -65,7 +85,9 @@ Requisitos: [Flutter SDK](https://docs.flutter.dev/get-started/install) estable 
 dispositivo Android.
 ```bash
 flutter pub get
-flutter run
+flutter run          # en un emulador o dispositivo Android
+flutter analyze      # análisis estático (debe dar "No issues found!")
+flutter test         # tests
 ```
 
 ## Equipo
