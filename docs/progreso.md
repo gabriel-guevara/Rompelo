@@ -11,7 +11,7 @@
 | 3 — Configuraciones | ✅ Hecha | `38debcb` | 3 pantallas de config, `MatchSetup` sealed, providers por juego, `DeckList`, `PlayerNamesEditor` |
 | 4 — Pantallas en partida | ✅ Hecha | `afb024a` | 3 partidas mock, `LiveGameTopBar`, `TimerBar`, contenido mock, `lastMatchResultProvider` |
 | 5 — Resultados y tabs | ✅ Hecha | `036826c` | Marcador con podio/premios/estadísticas, revancha, tabs Configurar y Ajustes |
-| 6 — Tests, pulido y README final | ✅ Hecha | *(pendiente de registrar)* | Flujo completo, accesibilidad (30 checks), `_MinTapArea`, capturas, README final |
+| 6 — Tests, pulido y README final | ✅ Hecha | `e70878f` | Flujo completo, accesibilidad (30 checks), `_MinTapArea`, capturas, README final |
 
 ## Instalar Flutter en el contenedor
 El contenedor de cada sesión es efímero y no trae Flutter. `storage.googleapis.com` y `pub.dev` son accesibles.
