@@ -9,7 +9,7 @@
 | 1 — Entorno y fundaciones | ✅ Hecha | `da737ad` | Tema, router con 4 tabs, widgets core, catálogo, tests |
 | 2 — Home / Explorar | ✅ Hecha | `da836d2` | Home real, MagicPickerCard, GameCard, filtro por vibra, `playerCountProvider` |
 | 3 — Configuraciones | ✅ Hecha | `38debcb` | 3 pantallas de config, `MatchSetup` sealed, providers por juego, `DeckList`, `PlayerNamesEditor` |
-| 4 — Pantallas en partida | ⏳ Pendiente | | |
+| 4 — Pantallas en partida | ✅ Hecha | *(pendiente de registrar)* | 3 partidas mock, `LiveGameTopBar`, `TimerBar`, contenido mock, `lastMatchResultProvider` |
 | 5 — Resultados y tabs | ⏳ Pendiente | | |
 | 6 — Tests, pulido y README final | ⏳ Pendiente | | |
 
@@ -34,6 +34,9 @@ cd build/web && python3 -m http.server 8765 &
 ```
 Al terminar: `rm -rf web build test/widget_test.dart && git checkout -- .metadata analysis_options.yaml`
 (`flutter create` regenera el test del contador y toca esos dos archivos).
+**Fase 4:** las partidas se abren directo con `http://localhost:8765/#/partida/<juego>`. Para interactuar
+(scroll con `page.mouse.wheel`) primero hay que mover el ratón sobre el canvas (`page.mouse.move(195, 500)`).
+Ojo: `flutter test` con `test/widget_test.dart` de `flutter create` presente falla; bórralo antes.
 
 ## Decisiones tomadas
 - **Stack:** `go_router` + `flutter_riverpod` (elegido por el equipo).
@@ -105,16 +108,49 @@ Al terminar: `rm -rf web build test/widget_test.dart && git checkout -- .metadat
 - **Fase 3 — `gameConfigScreenFor(game)`** (`presentation/game_config_screen.dart`) elige la pantalla por id:
   agregar un juego = un `case` más.
 - **Fase 3 — tests de pantallas** abren la ruta con `appRouterProvider.go(...)` en un viewport de 800 × 3600.
+- **Fase 4 — estado efímero vs global:** carta, turno, marcador en curso, opción elegida y sospechosos viven en
+  el `State` de cada pantalla (`ConsumerStatefulWidget` + `setState`); solo el **resultado final** sube a
+  Riverpod (`lastMatchResultProvider`, en `features/games/providers/match_result_provider.dart`).
+- **Fase 4 — configuración congelada:** cada partida lee `ref.read(matchSetupProvider(id))` una vez (con un
+  cast al subtipo) en un `late final`: cambiar la config a mitad de partida no debe alterar el marcador.
+- **Fase 4 — timers:** `CountdownBuilder` (core) posee el `AnimationController` y da `remaining`/`fraction`
+  a un builder; `TimerBar` (estilos `card` = Charadas y `compact` = Trivia) se construye encima, y el Impostor
+  usa `CountdownBuilder` directo para su píldora. Reinicio = `key` nueva por turno/pregunta; pausa =
+  `running: false` (se reanuda donde quedó). `liveTimersEnabledProvider` (true en la app) se sobreescribe con
+  `false` en **todos** los tests que abren partidas (`app_test`, `config_screens_test`, `test/features/games/`),
+  porque un timer corriendo hace que `pumpAndSettle` espere el turno entero. El estado `completed` del
+  controlador llega un frame **después** de mostrar 0:00 (`isDone` usa `>` estricto).
+- **Fase 4 — reglas mock:** Charadas = 3 cartas por turno (o fin del tiempo), turnos alternados por equipo o
+  jugador, `rounds × participantes` turnos → resultados; "Pasar" resta 1 (mínimo 0) con penalización.
+  Trivia = 12 preguntas (cíclicas), +50 (+100 la última si hay puntos dobles), termina antes si alguien llega a
+  la meta; "Pulsador en pantalla" = Team Vino vs Team Burbujas, "Por turnos" = cada jugador suma para sí (el
+  marcador muestra quien responde y quien sigue); robar turno una vez por pregunta, -20 si falla; si se acaba
+  el tiempo se revela sin puntos. Impostor = tema del primer mazo elegido (orden de `deck_options.dart`),
+  palabra = primera de la lista, impostores deterministas `mockImpostors(players, n)` (desde el final de la
+  mesa); ganan los ciudadanos si los marcados incluyen a todos los impostores (1 pt c/u), si no los impostores
+  (2 pts). La fase secreta de pasar el móvil se da por hecha ("Fase secreta completada").
+- **Fase 4 — "Salir":** diálogo "¿Salir de la partida?" con "Sí, salir" / "Seguir jugando" (el botón del diálogo
+  no se llama "Salir" para no chocar con el de la barra en los tests). `LiveGameScaffold` envuelve todo en
+  `PopScope(canPop: false)` para que el "atrás" de Android pida la misma confirmación.
+- **Fase 4 — rol oculto:** `Listener` (eventos crudos `onPointerDown/Up/Cancel`) en vez de `GestureDetector`,
+  que retrasa el `onTapDown` dentro de un scroll. El rol se dibuja **encima** del botón: abajo quedaba fuera
+  de pantalla al final de la lista. Muestra el rol de quien tiene el turno.
+- **Fase 4 — desviaciones del mockup:** "Partida en vivo" y "¡Robar turno!" en tipo oración (no mayúsculas);
+  botones de acción fijos abajo (`bottomNavigationBar` del `Scaffold`); avatares emoji en vez de ilustraciones;
+  sin animaciones infinitas (ping/pulse/spin) para no romper tests ni distraer; botones extra que el mockup
+  no tiene pero el flujo necesita: "Confirmar respuesta"/"Siguiente pregunta" (Trivia), "Siguiente turno"
+  (Impostor) y el veredicto de la votación; en Charadas el rival se atenúa para mostrar quién actúa.
 - Se respeta la regla "nunca todo en mayúsculas" de DESIGN.md aunque algunos `code.html` usen `uppercase`
   en etiquetas de sección (`SectionHeader` no las pasa a mayúsculas).
 
 ## Pendientes / notas para la siguiente sesión
-- **Fase 4**: las pantallas en partida deben leer su configuración con
-  `ref.watch(matchSetupProvider(gameId))` (o el provider tipado del juego): tiempo por turno/pregunta, rondas,
-  equipos o nombres, impostores y minutos de debate. Hay que reemplazar `PlayPlaceholderScreen`
-  (`features/games/presentation/`) y ajustar `test/app_test.dart`, que busca "Partida en vivo" y "Salir".
-- Los mazos (`features/setup/data/deck_options.dart`) solo tienen id, título y subtítulo; el contenido mock de
-  cartas/preguntas/palabras por mazo va en `features/games/data/mock_game_content.dart` (Fase 4) con los
-  mismos ids.
+- **Fase 5** lee `ref.watch(lastMatchResultProvider)` (`MatchResult?`: `gameId`, `scores` ya ordenados de
+  mayor a menor, `summary`). Si es `null`, la tab Marcador muestra el estado vacío. "¡Jugar revancha!" →
+  `context.go(AppRoutes.playGame(result.gameId))` (los providers de setup no son `autoDispose`, así que la
+  configuración se conserva). Reemplazar `PlaceholderScreen` en `results_screen.dart` y ajustar
+  `test/app_test.dart` ("tocar una tab" busca el texto "podio" del placeholder).
+- Premios/estadísticas del mockup `resultados` no tienen datos todavía: o se derivan de `scores` (ganador,
+  diferencia, total) o se agregan campos a `MatchResult` (p. ej. aciertos/pases) desde cada partida.
+- En Charadas los gestos "Arriba: Pasar / Abajo: Acierto" son decorativos (sin giroscopio).
 - La campana del home solo muestra un SnackBar (no hay notificaciones reales).
-- Widgets que el plan pone en fases posteriores: `LiveGameTopBar` y `TimerBar` (Fase 4).
+- `PlaceholderScreen` sigue en uso por Marcador y Ajustes (Fase 5).

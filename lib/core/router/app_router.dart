@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/catalog/data/games_catalog.dart';
 import '../../features/catalog/presentation/home_screen.dart';
-import '../../features/games/presentation/play_placeholder_screen.dart';
+import '../../features/games/presentation/game_play_screen.dart';
 import '../../features/results/presentation/results_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/setup/presentation/configure_tab_screen.dart';
@@ -82,8 +82,8 @@ GoRouter createAppRouter() {
         path: '${AppRoutes.play}/:${AppRoutes.gameParam}',
         parentNavigatorKey: rootNavigatorKey,
         redirect: _redirectUnknownGame,
-        builder: (context, state) => PlayPlaceholderScreen(
-          game: gameById(state.pathParameters[AppRoutes.gameParam]!)!,
+        builder: (context, state) => gamePlayScreenFor(
+          gameById(state.pathParameters[AppRoutes.gameParam]!)!,
         ),
       ),
     ],

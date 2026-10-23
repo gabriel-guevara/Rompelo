@@ -3,10 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rompelo_app/app.dart';
 import 'package:rompelo_app/core/router/app_router.dart';
+import 'package:rompelo_app/features/games/providers/match_result_provider.dart';
 
 /// Monta la app real (tema + router) dentro de un ProviderScope nuevo.
+///
+/// Los timers de partida se apagan: si corrieran, `pumpAndSettle` esperaría
+/// a que se acabe cada turno.
 Future<void> pumpApp(WidgetTester tester) async {
-  await tester.pumpWidget(const ProviderScope(child: RompeloApp()));
+  await tester.pumpWidget(ProviderScope(
+    overrides: [liveTimersEnabledProvider.overrideWithValue(false)],
+    child: const RompeloApp(),
+  ));
   await tester.pumpAndSettle();
 }
 
@@ -62,8 +69,11 @@ void main() {
     expect(find.text('Partida en vivo'), findsOneWidget);
     expect(find.text('Explorar'), findsNothing);
 
-    // "Salir" vuelve al home con la barra inferior.
+    // "Salir" pide confirmación y vuelve al home con la barra inferior.
     await tester.tap(find.text('Salir'));
+    await tester.pumpAndSettle();
+    expect(find.text('¿Salir de la partida?'), findsOneWidget);
+    await tester.tap(find.text('Sí, salir'));
     await tester.pumpAndSettle();
     expect(find.text('Explorar'), findsOneWidget);
   });

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rompelo_app/app.dart';
 import 'package:rompelo_app/core/router/app_router.dart';
+import 'package:rompelo_app/features/games/providers/match_result_provider.dart';
 import 'package:rompelo_app/features/setup/domain/match_setup.dart';
 import 'package:rompelo_app/features/setup/providers/match_setup_provider.dart';
 
@@ -14,7 +15,12 @@ Future<ProviderContainer> pumpAt(WidgetTester tester, String location) async {
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
 
-  await tester.pumpWidget(const ProviderScope(child: RompeloApp()));
+  // Timers de partida apagados: el CTA abre la partida y `pumpAndSettle`
+  // esperaría a que se agote cada turno.
+  await tester.pumpWidget(ProviderScope(
+    overrides: [liveTimersEnabledProvider.overrideWithValue(false)],
+    child: const RompeloApp(),
+  ));
   final container =
       ProviderScope.containerOf(tester.element(find.byType(RompeloApp)));
   container.read(appRouterProvider).go(location);

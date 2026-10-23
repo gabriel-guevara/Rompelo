@@ -27,7 +27,7 @@ los juegos funcionan como maquetas navegables con datos de ejemplo.
 | 1 | Entorno Flutter + fundaciones (tema, router, widgets core) | ✅ |
 | 2 | Home / Explorar | ✅ |
 | 3 | Pantallas de configuración | ✅ |
-| 4 | Pantallas en partida | ⏳ |
+| 4 | Pantallas en partida | ✅ |
 | 5 | Resultados / podio + tabs | ⏳ |
 | 6 | Tests, pulido y README final | ⏳ |
 
@@ -47,9 +47,35 @@ El mockup se hizo en Google Stitch y está exportado en [`design/stitch/`](desig
 |---|---|---|
 | Flutter / Dart | 3.47 (stable) / 3.13 | UI nativa |
 | `go_router` | ^17.5.0 | Navegación declarativa con barra inferior (`StatefulShellRoute.indexedStack`) |
-| `flutter_riverpod` | ^3.4.3 | Estado (router, número de jugadores y configuración de cada partida) |
+| `flutter_riverpod` | ^3.4.3 | Estado (router, número de jugadores, configuración de cada partida y resultado de la última) |
 | Fuente Outfit (TTF variable) | `assets/fonts/` | Tipografía empaquetada, funciona offline |
 | `flutter_lints` | ^6.0.0 | Reglas de estilo para `flutter analyze` |
+
+## Novedades de la Fase 4
+- **Partidas mock a pantalla completa** (sin bottom nav) fieles a `design/stitch/partida_*`, que reemplazan al
+  placeholder: `games/charades/charades_play_screen.dart`, `games/trivia/trivia_play_screen.dart` e
+  `games/impostor/impostor_play_screen.dart`. `gamePlayScreenFor(game)` elige la pantalla por id.
+- **Leen la configuración** con `matchSetupProvider(gameId)`: tiempo por turno/pregunta, rondas, equipos o
+  nombres, penalización al pasar, modo de respuesta, puntos doble/meta, impostores, pista y minutos de debate.
+- **Charadas:** ronda y marcador por equipo (o jugador en "todos vs todos"), timer, carta con categoría,
+  dificultad, palabra e indicación; "Pasar" (-1 si hay penalización) y "¡Acierto! +1 punto" avanzan la
+  carta; 3 cartas o fin del tiempo = cambio de turno; pausa con "Reanudar ronda" / "Terminar turno".
+- **Trivia:** marcador Team Vino / Team Burbujas (o jugador actual/siguiente "por turnos"), contador 1/12,
+  timer que pasa a "Tiempo crítico", carta de pregunta, opciones A–D que se **resaltan** al tocarlas,
+  "Confirmar respuesta" (revela y suma +50, +100 la última con puntos dobles) y "¡Robar turno!" (-20 si falla).
+- **Impostor:** timer de debate, fase secreta + tema común, turno de pregunta ("Siguiente turno"), radar de
+  sospechosos (tocar marca/desmarca), "Votar y delatar al impostor" (veredicto → resultados) y
+  "Mantén presionado para ver tu rol", que muestra la palabra o el rol **solo mientras se presiona**.
+- **Contenido mock** (`games/data/mock_game_content.dart`): cartas, preguntas y temas con los mismos ids de mazo
+  que `deck_options.dart`, intercalados según los mazos elegidos.
+- **Widgets core nuevos:** `LiveGameTopBar` ("Salir" con diálogo de confirmación → `/`, badge "Partida en vivo",
+  avatar; el "atrás" de Android pide la misma confirmación) y `TimerBar` / `CountdownBuilder` (cuenta regresiva
+  con `AnimationController`, pausable).
+- **Resultado de la partida:** al terminar se guarda en `lastMatchResultProvider` (juego, puntajes ordenados y
+  frase final) y se navega a `/resultados`, listo para el podio de la Fase 5.
+- **Tests:** cada partida (avanzar carta, sumar puntos, cambio de turno, pausa, resaltar opción, robo, rol
+  mientras se presiona, sospechosos, salir con confirmación, terminar → resultados), `TimerBar`, contenido mock.
+  Los timers se apagan en tests con `liveTimersEnabledProvider.overrideWithValue(false)`.
 
 ## Novedades de la Fase 3
 - **Pantallas de configuración reales** para Charadas, Trivia e Impostor (`features/setup/presentation/`),
