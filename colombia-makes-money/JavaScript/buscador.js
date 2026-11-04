@@ -124,8 +124,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Permite enlazar directo a una ruta: rutas.html?tema=ahorro
-    const temaURL = new URLSearchParams(window.location.search).get("tema");
+    // Permite enlazar directo a una ruta: rutas.html?tema=ahorro  o  rutas.html#ahorro
+    const temaURL = new URLSearchParams(window.location.search).get("tema")
+        || decodeURIComponent(window.location.hash.slice(1));
     if (temaURL) {
         inputTema.value = temaURL;
         buscar();

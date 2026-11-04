@@ -32,7 +32,9 @@ function renderizarNav(contenedor) {
                 : "hover:bg-amarillo-300"}">${texto}</a>`;
     }).join("");
 
-    contenedor.className = "sticky top-0 z-20 bg-amarillo-400 shadow-md";
+    contenedor.className = "sticky z-20 bg-amarillo-400 shadow-md";
+    // En celulares con notch, la barra se queda debajo de la zona segura
+    contenedor.style.top = "env(safe-area-inset-top, 0px)";
     contenedor.innerHTML = `
         <nav class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-cafe-900 font-semibold">
             <a href="index.html" class="flex items-center gap-2">
