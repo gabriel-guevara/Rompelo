@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="t">
+  <title id="t">Colombia Makes Money</title>
+  <!-- Moneda amarilla con borde ámbar -->
+  <circle cx="60" cy="60" r="56" fill="#F4B400"/>
+  <circle cx="60" cy="60" r="46" fill="#FFD84D" stroke="#B57F00" stroke-width="3"/>
+  <!-- Barras de crecimiento -->
+  <rect x="34" y="66" width="12" height="18" rx="2" fill="#3B2F14"/>
+  <rect x="54" y="54" width="12" height="30" rx="2" fill="#3B2F14"/>
+  <rect x="74" y="40" width="12" height="44" rx="2" fill="#3B2F14"/>
+  <!-- Flecha ascendente -->
+  <path d="M32 58 L54 42 L66 50 L86 32" fill="none" stroke="#FFF8E7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M76 30 L88 30 L88 42" fill="none" stroke="#FFF8E7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
