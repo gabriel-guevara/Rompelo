@@ -1,0 +1,35 @@
+{
+    "name": "Rómpelo",
+    "short_name": "Rómpelo",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#FDF7FF",
+    "theme_color": "#FDF7FF",
+    "description": "Juegos rompehielo para grupos desde un solo dispositivo compartido.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

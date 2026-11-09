@@ -85,11 +85,19 @@ flutter analyze      # análisis estático (debe dar "No issues found!")
 flutter test         # todos los tests
 dart format .        # formato estándar de Dart
 ```
-Para verlo en el navegador sin emulador (solo para revisar la UI; el repo no incluye la plataforma web):
+### Ver la app sin instalar Flutter
+**Demo web:** https://gabriel-guevara.github.io/Rompelo/ (cualquier navegador; en el escritorio conviene la vista
+móvil de las DevTools a 390 px). La publica el workflow `.github/workflows/deploy-web.yml` en cada push a `main`:
+analiza, corre los tests, compila con `flutter build web` y despliega en GitHub Pages.
+
+> Configuración única del dueño del repo: *Settings › Pages › Build and deployment › Source: **GitHub Actions***.
+
+Para compilar la versión web en local (la plataforma web vive en `web/`):
 ```bash
-flutter create --platforms=web .            # temporal, no se commitea
-flutter build web --no-web-resources-cdn    # sin el flag CanvasKit se pide a una CDN
-cd build/web && python3 -m http.server 8765 # abrir http://localhost:8765/#/partida/trivia
+flutter run -d chrome                                                # modo desarrollo
+flutter build web --base-href /Rompelo/ --no-web-resources-cdn       # sin el flag CanvasKit se pide a una CDN
+mkdir -p /tmp/site && cp -r build/web /tmp/site/Rompelo
+cd /tmp/site && python3 -m http.server 8765    # abrir http://localhost:8765/Rompelo/#/partida/trivia
 ```
 
 ## Stack y por qué
@@ -221,6 +229,8 @@ Verificada con las guías de `flutter_test` en todas las rutas (`test/accessibil
 - Ancho máximo de 540 px en tablet; tipografía grande y gruesa para leer a distancia.
 
 ## Changelog por fase
+- **Versión web:** plataforma `web/` en el repo y workflow de GitHub Pages que publica la demo en cada push a
+  `main` (sin instalar Flutter para verla).
 - **Fase 6 — Tests, pulido y README final:** test de flujo completo y test de accesibilidad (30 comprobaciones),
   área táctil mínima y semántica centralizadas en `ChunkyPressable`, campo de nombres de equipo a 48 px,
   podio centrado con 2 participantes, confeti fuera del texto, capturas en `docs/screenshots/`, este README.

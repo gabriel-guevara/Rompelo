@@ -192,6 +192,11 @@ Ojo: `flutter test` con `test/widget_test.dart` de `flutter create` presente fal
 - Se respeta la regla "nunca todo en mayúsculas" de DESIGN.md aunque algunos `code.html` usen `uppercase`
   en etiquetas de sección (`SectionHeader` no las pasa a mayúsculas).
 
+- **Versión web (GitHub Pages):** se commiteó `web/` (generado con `flutter create --platforms=web`; se
+  descartaron el `test/widget_test.dart` de plantilla y los cambios a `.metadata`/`pubspec.lock`) con título,
+  idioma y colores de Rómpelo. `.github/workflows/deploy-web.yml` fija Flutter 3.47.9, corre analyze + test y
+  publica `build/web` con `--base-href /<repo>/`. go_router usa URLs con `#`, así que Pages no necesita `404.html`.
+
 ## Pendientes / siguiente etapa (lógica real de juego)
 El plan del front (fases 0–6) está completo. Lo que queda fuera de su alcance, por prioridad sugerida:
 1. **Persistencia local** (p. ej. `shared_preferences` o `hive`): hoy la configuración, los ajustes y el último
