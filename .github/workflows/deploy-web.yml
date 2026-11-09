@@ -1,0 +1,52 @@
+# Compila Rómpelo para web y lo publica en GitHub Pages en cada push a main.
+# Requisito único (dueño del repo): Settings › Pages › Source: "GitHub Actions".
+name: Deploy web (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un solo despliegue a la vez; uno nuevo no cancela el que ya está publicando.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.9
+          cache: true
+
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+      # --base-href: Pages sirve el sitio en /<repo>/.
+      # --no-web-resources-cdn: CanvasKit va dentro del sitio (no se pide a una CDN).
+      - run: flutter build web --release --base-href /${{ github.event.repository.name }}/ --no-web-resources-cdn
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
