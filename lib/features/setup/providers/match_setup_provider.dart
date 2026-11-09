@@ -65,6 +65,13 @@ class TriviaSetupNotifier extends Notifier<TriviaSetup> {
     state = state.copyWith(selectedDecks: decks);
     return true;
   }
+  /// Reemplaza todos los packs de una vez (mezclas rápidas).
+  /// `false` si no alcanza el mínimo.
+  bool setDecks(Set<String> decks) {
+    if (decks.length < state.minDecks) return false;
+    state = state.copyWith(selectedDecks: decks);
+    return true;
+  }
 
   void setAnswerMode(TriviaAnswerMode mode) =>
       state = state.copyWith(answerMode: mode);

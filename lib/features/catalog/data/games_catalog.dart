@@ -55,14 +55,14 @@ const List<GameItem> gamesCatalog = [
         'Preguntas directas al grano. El más rápido en tocar el pulsador '
         'roba el turno y la gloria.',
     icon: Icons.quiz_rounded,
-    tag: 'Cultura pop & velocidad',
+    tag: 'Conocimiento & velocidad',
     durationMinutes: 12,
     minPlayers: 2,
     maxPlayers: 20,
     chips: [
-      GameChip(label: 'Hits 2000s', icon: Icons.music_note_rounded),
-      GameChip(
-          label: 'Memes virales', icon: Icons.local_fire_department_rounded),
+       GameChip(
+          label: 'Para toda la familia', icon: Icons.family_restroom_rounded),
+      GameChip(label: 'Verdadero o falso', icon: Icons.rule_rounded),
       GameChip(label: 'Robo de turno', icon: Icons.bolt_rounded),
     ],
     accent: GameAccent.warm,

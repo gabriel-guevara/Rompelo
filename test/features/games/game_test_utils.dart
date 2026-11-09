@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../test_utils.dart';
@@ -10,9 +11,10 @@ Future<ProviderContainer> pumpGame(
   WidgetTester tester,
   String gameId, {
   void Function(ProviderContainer container)? prepare,
+  List<Override> overrides = const [],
 }) =>
-    pumpAppAt(tester, '/partida/$gameId', prepare: prepare);
-
+    pumpAppAt(tester, '/partida/$gameId',
+        prepare: prepare, overrides: overrides);
 /// Toca "Salir", cancela una vez y luego confirma: debe volver a `/`.
 Future<void> expectExitWithConfirmation(
     WidgetTester tester, ProviderContainer container) async {

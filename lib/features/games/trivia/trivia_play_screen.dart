@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'dart:math';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/theme/app_theme.dart';
@@ -9,12 +10,12 @@ import '../../../core/widgets/chunky_button.dart';
 import '../../../core/widgets/chunky_card.dart';
 import '../../../core/widgets/chunky_pressable.dart';
 import '../../../core/widgets/timer_bar.dart';
-import '../../setup/data/deck_options.dart';
 import '../../setup/domain/match_setup.dart';
 import '../../setup/providers/match_setup_provider.dart';
 import '../data/mock_game_content.dart';
 import '../providers/match_result_provider.dart';
 import '../widgets/live_game_scaffold.dart';
+import '../providers/trivia_deck_provider.dart';
 
 /// Preguntas de la partida mock (el contador "7 / 12" del mockup).
 const int kTriviaQuestions = 12;
@@ -25,6 +26,13 @@ const int kStealPenalty = 20;
 
 /// Equipos del modo "Pulsador en pantalla" (en grupo).
 const List<String> kTriviaTeams = ['Team Vino', 'Team Burbujas'];
+/// Frase final del marcador: cambia en cada partida.
+const List<String> kTriviaSummaries = [
+  '¡Cerebros en llamas!',
+  '¡Qué nivel de cultura general!',
+  '¡Neuronas a toda máquina!',
+  '¡Sabiduría en estado puro!',
+];
 
 /// Partida de Trivia (`/partida/trivia`, mockup `partida_trivia`).
 ///
@@ -43,11 +51,9 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
   late final TriviaSetup _setup =
       ref.read(matchSetupProvider('trivia')) as TriviaSetup;
 
-  late final List<TriviaQuestion> _questions = interleaveDecks(
-    triviaQuestionsByPack,
-    triviaPacks.map((pack) => pack.id),
-    _setup.selectedDecks,
-  );
+  late final List<TriviaQuestion> _questions = ref
+      .read(triviaDeckProvider)
+      .draw(_setup.selectedDecks, kTriviaQuestions);
 
   late final bool _teams = _setup.answerMode == TriviaAnswerMode.buzzer;
 
@@ -60,6 +66,23 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
   // Estadísticas para los "premios de la noche" del marcador.
   late final List<int> _corrects = List.filled(_participants.length, 0);
   late final List<int> _steals = List.filled(_participants.length, 0);
+  late final List<int> _stealTries = List.filled(_participants.length, 0);
+  late final List<int> _streak = List.filled(_participants.length, 0);
+  late final List<int> _bestStreak = List.filled(_participants.length, 0);
+
+  /// Mayor desventaja que tuvo cada uno frente al líder (para "Remontada").
+  late final List<int> _maxDeficit = List.filled(_participants.length, 0);
+
+  /// Respuesta correcta más rápida de cada uno.
+  late final List<Duration?> _fastest =
+      List<Duration?>.filled(_participants.length, null);
+
+  /// Aciertos por categoría de cada participante.
+  late final List<Map<String, int>> _byCategory = [
+    for (var i = 0; i < _participants.length; i++) <String, int>{},
+  ];
+
+  final Stopwatch _questionClock = Stopwatch()..start();
   final DateTime _startedAt = DateTime.now();
 
   int _index = 0;
@@ -82,23 +105,37 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
   void _confirm() {
     if (_selected == null || _revealed) return;
     final correct = _selected == _question.correctIndex;
+    final who = _answering;
+    final elapsed = _questionClock.elapsed;
+
     setState(() {
       _revealed = true;
       if (correct) {
-        _scores[_answering] += _points;
-        _corrects[_answering]++;
-        if (_stolen) _steals[_answering]++;
-      } else if (_stolen) {
-        _scores[_answering] -= kStealPenalty;
+        _scores[who] += _points;
+        _corrects[who]++;
+        if (_stolen) _steals[who]++;
+        _streak[who]++;
+        _bestStreak[who] = max(_bestStreak[who], _streak[who]);
+        final fastest = _fastest[who];
+        if (fastest == null || elapsed < fastest) _fastest[who] = elapsed;
+        final category = _question.category;
+        _byCategory[who][category] = (_byCategory[who][category] ?? 0) + 1;
+      } else {
+        _streak[who] = 0;
+        if (_stolen) _scores[who] -= kStealPenalty;
       }
+      _trackDeficits();
     });
-    final who = _participants[_answering];
+
+    final name = _participants[who];
     showGameMessage(
       context,
       correct
-          ? '¡Respuesta correcta! $who sumó +$_points puntos'
+          ? _streak[who] >= 3
+              ? '¡Racha de ${_streak[who]}! $name sumó +$_points puntos'
+              : '¡Respuesta correcta! $name sumó +$_points puntos'
           : _stolen
-              ? 'Robo fallido: $who pierde $kStealPenalty puntos'
+              ? 'Robo fallido: $name pierde $kStealPenalty puntos'
               : 'Casi… la respuesta era ${_question.options[_question.correctIndex]}',
     );
   }
@@ -108,14 +145,18 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
     setState(() {
       _stolen = true;
       _answering = (_answering + 1) % _participants.length;
+      _stealTries[_answering]++;
     });
     showGameMessage(context, '¡${_participants[_answering]} roba el turno!');
   }
 
-  /// Se acabó el tiempo: se revela sin sumar puntos.
+  /// Se acabó el tiempo: se revela sin sumar puntos y se corta la racha.
   void _timeUp() {
     if (_revealed) return;
-    setState(() => _revealed = true);
+    setState(() {
+      _revealed = true;
+      _streak[_answering] = 0;
+    });
     showGameMessage(context, '¡Tiempo! Nadie suma en esta pregunta');
   }
 
@@ -129,7 +170,16 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
       _selected = null;
       _revealed = false;
       _stolen = false;
+      _questionClock.reset();
     });
+  }
+
+  /// Guarda cuánto llegó a ir perdiendo cada uno frente al líder.
+  void _trackDeficits() {
+    final leader = _scores.reduce(max);
+    for (var i = 0; i < _scores.length; i++) {
+      _maxDeficit[i] = max(_maxDeficit[i], leader - _scores[i]);
+    }
   }
 
   void _finish() {
@@ -142,7 +192,7 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
           for (var i = 0; i < _participants.length; i++)
             ScoreEntry(name: _participants[i], points: _scores[i]),
         ],
-        summary: '¡Cerebros en llamas!',
+        summary: kTriviaSummaries[Random().nextInt(kTriviaSummaries.length)],
         detail: plural(_index + 1, 'pregunta', 'preguntas'),
         plays: _index + 1,
         playsLabel: 'Preguntas jugadas',
@@ -152,28 +202,142 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
     );
   }
 
-  List<MatchAward> _awards() {
-    final brain = bestIndex(_corrects);
-    final thief = bestIndex(_steals);
+  // --- Premios de la noche ---------------------------------------------------
+
+  /// Índices empatados en el valor más alto; vacío si no llega a [atLeast].
+  List<int> _leaders(List<int> values, {int atLeast = 1}) {
+    final top = values.fold<int>(0, max);
+    if (top < atLeast) return const [];
     return [
-      if (brain != null)
-        MatchAward(
-          title: 'Cerebro de la noche',
-          description: 'Más respuestas correctas',
-          winner: _participants[brain],
-          caption: plural(_corrects[brain], 'acierto', 'aciertos'),
-          icon: Icons.psychology_rounded,
-        ),
-      if (thief != null)
-        MatchAward(
-          title: 'Ladrón de turnos',
-          description: 'Robos que salieron bien',
-          winner: _participants[thief],
-          caption: plural(_steals[thief], 'robo', 'robos'),
-          icon: Icons.bolt_rounded,
-          tone: AwardTone.wine,
-        ),
+      for (var i = 0; i < values.length; i++)
+        if (values[i] == top) i,
     ];
+  }
+
+  /// "Ana", "Ana y Lucas" o "Ana, Lucas y Sofi".
+  String _namesAt(List<int> indexes) {
+    final names = [for (final i in indexes) _participants[i]];
+    if (names.length == 1) return names.first;
+    return '${names.sublist(0, names.length - 1).join(', ')} y ${names.last}';
+  }
+
+  List<MatchAward> _awards() {
+    // Fijos: siempre arriba si aplican.
+    final fixed = <MatchAward>[];
+    final brains = _leaders(_corrects);
+    if (brains.isNotEmpty) {
+      fixed.add(MatchAward(
+        title: brains.length > 1 ? 'Cerebros empatados' : 'Cerebro de la noche',
+        description: 'Más respuestas correctas',
+        winner: _namesAt(brains),
+        caption: plural(_corrects[brains.first], 'acierto', 'aciertos'),
+        icon: Icons.psychology_rounded,
+      ));
+    }
+    final comeback = _comebackAward();
+    if (comeback != null) fixed.add(comeback);
+
+    // Variables: se barajan para que cada partida muestre premios distintos.
+    final extras = <MatchAward>[];
+    final streakers = _leaders(_bestStreak, atLeast: 3);
+    if (streakers.isNotEmpty) {
+      extras.add(MatchAward(
+        title: 'Racha imparable',
+        description: 'Más aciertos seguidos',
+        winner: _namesAt(streakers),
+        caption: '${_bestStreak[streakers.first]} seguidas',
+        icon: Icons.local_fire_department_rounded,
+        tone: AwardTone.warm,
+      ));
+    }
+    final fastest = _fastestAward();
+    if (fastest != null) extras.add(fastest);
+    final expert = _expertAward();
+    if (expert != null) extras.add(expert);
+
+    final thieves = _leaders(_steals);
+    final brave = _leaders(_stealTries);
+    if (thieves.isNotEmpty) {
+      extras.add(MatchAward(
+        title: 'Ladrón de turnos',
+        description: 'Robos que salieron bien',
+        winner: _namesAt(thieves),
+        caption: plural(_steals[thieves.first], 'robo', 'robos'),
+        icon: Icons.bolt_rounded,
+        tone: AwardTone.wine,
+      ));
+    } else if (brave.isNotEmpty) {
+      extras.add(MatchAward(
+        title: 'Corazón valiente',
+        description: 'Se atrevió a robar aunque fallara',
+        winner: _namesAt(brave),
+        caption: plural(_stealTries[brave.first], 'intento', 'intentos'),
+        icon: Icons.favorite_rounded,
+        tone: AwardTone.wine,
+      ));
+    }
+    extras.shuffle();
+
+    // Máximo 4: el marcador se mantiene corto y sorprende en cada partida.
+    return [...fixed, ...extras].take(4).toList();
+  }
+
+  MatchAward? _comebackAward() {
+    final winners = _leaders(_scores);
+    if (winners.length != 1) return null;
+    final w = winners.first;
+    if (_maxDeficit[w] < kTriviaPoints * 2) return null;
+    return MatchAward(
+      title: 'Remontada épica',
+      description: 'Ganó después de ir perdiendo',
+      winner: _participants[w],
+      caption: 'Iba ${_maxDeficit[w]} pts abajo',
+      icon: Icons.trending_up_rounded,
+      tone: AwardTone.wine,
+    );
+  }
+
+  MatchAward? _fastestAward() {
+    int? best;
+    for (var i = 0; i < _fastest.length; i++) {
+      final time = _fastest[i];
+      if (time != null && (best == null || time < _fastest[best]!)) best = i;
+    }
+    if (best == null) return null;
+    final seconds = (_fastest[best]!.inMilliseconds / 1000)
+        .toStringAsFixed(1)
+        .replaceAll('.', ',');
+    return MatchAward(
+      title: 'Rayo veloz',
+      description: 'La respuesta correcta más rápida',
+      winner: _participants[best],
+      caption: 'En $seconds s',
+      icon: Icons.flash_on_rounded,
+    );
+  }
+
+  MatchAward? _expertAward() {
+    var bestCount = 1; // pide al menos 2 aciertos en la misma categoría
+    int? who;
+    var category = '';
+    for (var i = 0; i < _byCategory.length; i++) {
+      for (final MapEntry(key: cat, value: count) in _byCategory[i].entries) {
+        if (count > bestCount) {
+          bestCount = count;
+          who = i;
+          category = cat;
+        }
+      }
+    }
+    if (who == null) return null;
+    return MatchAward(
+      title: 'Especialista',
+      description: 'Dominó $category',
+      winner: _participants[who],
+      caption: plural(bestCount, 'acierto', 'aciertos'),
+      icon: Icons.school_rounded,
+      tone: AwardTone.warm,
+    );
   }
 
   @override
@@ -517,8 +681,10 @@ class _OptionsGrid extends StatelessWidget {
     return Column(
       children: [
         row(0, 1),
-        const SizedBox(height: AppSpacing.sm),
-        row(2, 3),
+        if (options.length > 2) ...[
+          const SizedBox(height: AppSpacing.sm),
+          row(2, 3),
+        ],
       ],
     );
   }

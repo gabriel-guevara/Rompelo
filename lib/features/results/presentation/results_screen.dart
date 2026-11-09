@@ -64,15 +64,23 @@ class ResultsScreen extends ConsumerWidget {
         SectionHeader(
           title: 'Premios de la noche',
           size: SectionHeaderSize.title,
-          trailing: Text('Momentos clave',
+          trailing: Text(
+              result.awards.length == 1
+                  ? '1 premio'
+                  : '${result.awards.length} premios',
               style: Theme.of(context)
                   .textTheme
                   .labelSmall
                   ?.copyWith(color: AppColors.onSurfaceVariant)),
         ),
         const SizedBox(height: AppSpacing.sm),
-        for (final award in result.awards) ...[
-          AwardTile(award: award),
+        for (final (i, award) in result.awards.indexed) ...[
+          _PopIn(
+            // ObjectKey: cada partida nueva vuelve a animar sus premios.
+            key: ObjectKey(award),
+            index: i,
+            child: AwardTile(award: award),
+          ),
           const SizedBox(height: AppSpacing.xs),
         ],
       ],
@@ -303,6 +311,72 @@ class _EmptyResults extends StatelessWidget {
           onPressed: () => context.go(AppRoutes.explore),
         ),
       ],
+    );
+  }
+}
+/// Entrada escalonada de los premios: cada uno aparece y sube un poco,
+/// uno detrás de otro. Sin `Timer`, así `pumpAndSettle` de los tests no
+/// queda esperando nada pendiente.
+class _PopIn extends StatefulWidget {
+  const _PopIn({super.key, required this.index, required this.child});
+
+  final int index;
+  final Widget child;
+
+  @override
+  State<_PopIn> createState() => _PopInState();
+}
+
+class _PopInState extends State<_PopIn> with SingleTickerProviderStateMixin {
+  static const _step = Duration(milliseconds: 140);
+  static const _base = Duration(milliseconds: 380);
+
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: _base + _step * widget.index,
+  );
+
+  late final Animation<double> _progress = CurvedAnimation(
+    parent: _controller,
+    curve: Interval(
+      (_step * widget.index).inMilliseconds /
+          _controller.duration!.inMilliseconds,
+      1,
+      curve: Curves.easeOutBack,
+    ),
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.value = 1; // "Reducir animaciones" activado
+    } else if (_controller.isDismissed) {
+      _controller.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _progress,
+      child: widget.child,
+      builder: (context, child) {
+        final t = _progress.value;
+        return Opacity(
+          opacity: t.clamp(0.0, 1.0),
+          child: Transform.translate(
+            offset: Offset(0, 20 * (1 - t)),
+            child: child,
+          ),
+        );
+      },
     );
   }
 }

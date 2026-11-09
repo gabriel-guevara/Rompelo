@@ -38,15 +38,24 @@ void main() {
 
   test('seleccionar mazos respeta el mínimo de cada juego', () {
     final trivia = container.read(triviaSetupProvider.notifier);
-    expect(trivia.toggleDeck('geografia'), isTrue);
+    // Arranca con {'animales', 'mundo', 'cine_familia'}.
+    expect(trivia.toggleDeck('espacio'), isTrue);
     expect(container.read(triviaSetupProvider).selectedDecks, hasLength(4));
 
     // Quita hasta quedar en 2; el tercero ya no se puede quitar.
-    expect(trivia.toggleDeck('geografia'), isTrue);
-    expect(trivia.toggleDeck('hits'), isTrue);
-    expect(trivia.toggleDeck('cine'), isFalse);
-    expect(
-        container.read(triviaSetupProvider).selectedDecks, {'cine', 'memes'});
+    expect(trivia.toggleDeck('espacio'), isTrue);
+    expect(trivia.toggleDeck('animales'), isTrue);
+    expect(trivia.toggleDeck('mundo'), isFalse);
+    expect(container.read(triviaSetupProvider).selectedDecks,
+        {'mundo', 'cine_familia'});
+  });
+
+  test('las mezclas rápidas no bajan del mínimo', () {
+    final trivia = container.read(triviaSetupProvider.notifier);
+    expect(trivia.setDecks({'vf'}), isFalse);
+    expect(trivia.setDecks({'mates', 'inventos', 'vf'}), isTrue);
+    expect(container.read(triviaSetupProvider).selectedDecks,
+        {'mates', 'inventos', 'vf'});
   });
 
   test('dos impostores solo con grupos grandes', () {

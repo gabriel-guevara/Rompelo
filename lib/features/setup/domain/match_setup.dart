@@ -122,7 +122,7 @@ final class TriviaSetup extends MatchSetup {
     const base = TriviaSetup(
       players: 0,
       playerNames: [],
-      selectedDecks: {'hits', 'cine', 'memes'},
+      selectedDecks: {'animales', 'mundo', 'cine_familia'},
     );
     return base.withPlayers(players);
   }

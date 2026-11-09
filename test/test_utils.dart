@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rompelo_app/app.dart';
 import 'package:rompelo_app/core/router/app_router.dart';
@@ -10,11 +11,13 @@ import 'package:rompelo_app/features/games/providers/match_result_provider.dart'
 /// `home_screen_test.dart`).
 ///
 /// [prepare] ajusta el estado antes de navegar (p. ej. guardar un resultado
-/// o bajar las rondas).
+/// o bajar las rondas). [overrides] reemplaza providers (p. ej. un mazo de
+/// preguntas fijo para que el test no dependa del azar).
 Future<ProviderContainer> pumpAppAt(
   WidgetTester tester,
   String location, {
   void Function(ProviderContainer container)? prepare,
+  List<Override> overrides = const [],
   Size size = const Size(800, 2400),
 }) async {
   tester.view.physicalSize = size;
@@ -22,7 +25,10 @@ Future<ProviderContainer> pumpAppAt(
   addTearDown(tester.view.reset);
 
   await tester.pumpWidget(ProviderScope(
-    overrides: [liveTimersEnabledProvider.overrideWithValue(false)],
+    overrides: [
+      liveTimersEnabledProvider.overrideWithValue(false),
+      ...overrides,
+    ],
     child: const RompeloApp(),
   ));
   final container =

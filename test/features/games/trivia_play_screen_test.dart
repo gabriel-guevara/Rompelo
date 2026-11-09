@@ -1,7 +1,10 @@
+import 'package:rompelo_app/features/games/data/mock_game_content.dart';
+import 'package:rompelo_app/features/games/providers/trivia_deck_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rompelo_app/features/games/providers/match_result_provider.dart';
 import 'package:rompelo_app/features/games/trivia/trivia_play_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'game_test_utils.dart';
 
@@ -11,22 +14,43 @@ Finder scoreText(String side, String text) => find.descendant(
       of: find.byKey(ValueKey('trivia-score-$side')),
       matching: find.text(text),
     );
+    /// Pregunta conocida: la correcta es la opción 1 ("B").
+const kTestQuestion = TriviaQuestion(
+  question: '¿Cuántos corazones tiene un pulpo?',
+  options: ['1', '3', '2', '4'],
+  correctIndex: 1,
+  category: 'Animales',
+  tag: 'Test',
+);
+
+/// Mazo sin azar: siempre devuelve la misma pregunta.
+class _FixedDeck extends TriviaDeck {
+  @override
+  List<TriviaQuestion> draw(Set<String> packs, int count) =>
+      List.filled(count, kTestQuestion);
+}
+
+Future<ProviderContainer> pumpTrivia(WidgetTester tester) => pumpGame(
+      tester,
+      'trivia',
+      overrides: [triviaDeckProvider.overrideWithValue(_FixedDeck())],
+    );
 
 void main() {
   testWidgets('muestra marcador, contador y la primera pregunta',
       (tester) async {
-    await pumpGame(tester, 'trivia');
+    await pumpTrivia(tester);
 
     expect(find.text('Team Vino'), findsOneWidget);
     expect(find.text('Team Burbujas'), findsOneWidget);
     expect(find.text('1 / $kTriviaQuestions'), findsOneWidget);
-    expect(find.textContaining('Gasolina'), findsOneWidget);
+        expect(find.textContaining('corazones tiene un pulpo'), findsOneWidget);
     expect(find.text('¡Robar turno!'), findsOneWidget);
   });
 
   testWidgets('tocar una opción la resalta; confirmar suma puntos',
       (tester) async {
-    await pumpGame(tester, 'trivia');
+    await pumpTrivia(tester);
     expect(find.text('Confirmar respuesta'), findsNothing);
 
     await tester.tap(option(1)); // 2004, la correcta
@@ -59,7 +83,7 @@ void main() {
   });
 
   testWidgets('robar turno y fallar resta puntos al ladrón', (tester) async {
-    await pumpGame(tester, 'trivia');
+    await pumpTrivia(tester);
 
     await tester.tap(find.text('¡Robar turno!'));
     await tester.pumpAndSettle();

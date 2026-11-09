@@ -17,7 +17,7 @@ import '../domain/match_setup.dart';
 import '../providers/match_setup_provider.dart';
 import '../widgets/config_scaffold.dart';
 import '../widgets/config_section.dart';
-import '../widgets/deck_list.dart';
+import '../widgets/pack_picker.dart';
 import '../widgets/game_config_hero.dart';
 import 'config_feedback.dart';
 
@@ -52,10 +52,10 @@ class TriviaConfigScreen extends ConsumerWidget {
       ),
       footnote: 'Pasa el teléfono al centro de la mesa al iniciar',
       children: [
-        const GameConfigHero(
+                const GameConfigHero(
           title: 'Trivia relámpago',
-          description:
-              'Preguntas directas al hueso, memes y cultura pop en segundos.',
+          description: 'Cultura general para jugar en familia: animales, '
+              'espacio, mitos, cine y mucho más.',
           tint: AppColors.primaryFixed,
           tags: [
             PillChip(
@@ -66,8 +66,8 @@ class TriviaConfigScreen extends ConsumerWidget {
               foreground: AppColors.onTertiaryFixedVariant,
             ),
             PillChip(
-              label: 'Party casual',
-              icon: Icons.local_fire_department_rounded,
+              label: 'Todas las edades',
+              icon: Icons.family_restroom_rounded,
               background: AppColors.surfaceContainerLowest,
               foreground: AppColors.primary,
             ),
@@ -160,31 +160,36 @@ class TriviaConfigScreen extends ConsumerWidget {
             ),
           ],
         ),
-        Column(
+                Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SectionHeader(
-              title: 'Packs de preguntas',
+              title: '¿De qué quieren jugar?',
               size: SectionHeaderSize.title,
-              trailing:
-                  CountBadge(label: '${setup.selectedDecks.length} activos'),
+              trailing: CountBadge(
+                label: '${setup.selectedDecks.length} '
+                    '${setup.selectedDecks.length == 1 ? 'tema' : 'temas'}',
+                background: AppColors.primaryFixed,
+                foreground: AppColors.primary,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text('Mínimo ${setup.minDecks} seleccionados',
-                  style: textTheme.bodySmall),
+              child: Text(
+                'Elige una mezcla rápida o personaliza los temas',
+                style: textTheme.bodySmall,
+              ),
             ),
             const SizedBox(height: AppSpacing.sm),
-            DeckList(
-              decks: triviaPacks,
+            PackPicker(
+              packs: triviaPacks,
+              groups: triviaPackGroups,
               selected: setup.selectedDecks,
-              activeColor: AppColors.primary,
-              activeShadow: AppColors.shadowPrimary,
-              activeTint: AppColors.primaryFixed,
+              onSelectMany: notifier.setDecks,
               onToggle: (id) {
                 if (!notifier.toggleDeck(id)) {
                   showConfigMessage(context,
-                      'Necesitas al menos ${setup.minDecks} packs activos');
+                      'Deja al menos ${setup.minDecks} temas activos');
                 }
               },
             ),

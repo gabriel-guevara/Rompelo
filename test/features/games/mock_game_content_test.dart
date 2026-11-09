@@ -13,13 +13,15 @@ void main() {
         impostorDecks.map((d) => d.id).toSet());
   });
 
-  test('las preguntas tienen 4 opciones y una respuesta válida', () {
+    test('las preguntas tienen 4 opciones (2 en V/F) y una respuesta válida',
+      () {
     for (final question in triviaQuestionsByPack.values.expand((q) => q)) {
-      expect(question.options, hasLength(4));
-      expect(question.correctIndex, inInclusiveRange(0, 3));
+      expect(question.options.length, anyOf(2, 4), reason: question.question);
+      expect(question.correctIndex,
+          inInclusiveRange(0, question.options.length - 1));
     }
   });
-
+  
   test('interleaveDecks intercala respetando el orden de los mazos', () {
     final result = interleaveDecks(
       {
