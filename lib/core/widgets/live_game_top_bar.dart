@@ -5,11 +5,11 @@ import '../constants/app_color.dart';
 import '../constants/app_spacing.dart';
 import '../router/app_routes.dart';
 import 'chunky_button.dart';
+import '../../features/catalog/widgets/how_to_play.dart';
 import 'chunky_pressable.dart';
-import 'rompelo_app_bar.dart';
 
-/// Barra superior de las partidas: "Salir", badge "Partida en vivo" y avatar
-/// (mockups `partida_*`). Reemplaza al `RompeloAppBar` del shell.
+/// Barra superior de las partidas: "Salir", badge "Partida en vivo" y las
+/// reglas del juego (mockups `partida_*`). Reemplaza al `RompeloAppBar` del shell.
 class LiveGameTopBar extends StatelessWidget implements PreferredSizeWidget {
   const LiveGameTopBar({super.key});
 
@@ -93,7 +93,10 @@ class LiveGameTopBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              const RompeloAvatar(),
+              // Reglas del juego en curso (`/partida/:juego`).
+              HowToPlayButton(
+                gameId: GoRouterState.of(context).pathParameters['juego'],
+              ),
             ],
           ),
         ),
@@ -110,6 +113,8 @@ Future<void> exitMatchWithConfirmation(BuildContext context) async {
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
+      // En horizontal (Charadas) la altura no alcanza: el diálogo desplaza.
+      scrollable: true,
       icon: const Icon(Icons.logout_rounded, color: AppColors.secondary),
       title: const Text('¿Salir de la partida?'),
       content: const Text(

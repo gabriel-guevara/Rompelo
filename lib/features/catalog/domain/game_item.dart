@@ -62,18 +62,16 @@ enum GameAccent {
 /// Es un enum (y no strings sueltos) para que el compilador avise si un
 /// juego usa una vibra que no existe, igual que un `union type` en TS.
 enum GameVibe {
-  fiesta('🎉', 'Fiesta total'),
-  misterio('🕵️', 'Misterio'),
-  reflejos('⚡', 'Reflejos rápidos'),
-  chill('🍷', 'Chill con amigos');
+  fiesta(Icons.celebration_rounded, 'Fiesta total'),
+  misterio(Icons.search_rounded, 'Misterio'),
+  reflejos(Icons.bolt_rounded, 'Reflejos rápidos'),
+  chill(Icons.wine_bar_rounded, 'Chill con amigos');
 
-  const GameVibe(this.emoji, this.label);
+  const GameVibe(this.icon, this.label);
 
-  final String emoji;
+  /// Icono del chip del filtro.
+  final IconData icon;
   final String label;
-
-  /// Texto del chip: "🎉 Fiesta total".
-  String get chipLabel => '$emoji $label';
 }
 
 /// Etiqueta corta de un juego (mazos o mecánicas destacadas en la tarjeta).
@@ -101,6 +99,7 @@ class GameItem {
     required this.accent,
     required this.ctaIcon,
     required this.vibes,
+    required this.rules,
   });
 
   /// Identificador estable; también es el segmento `:juego` de las rutas.
@@ -124,6 +123,9 @@ class GameItem {
 
   /// Vibras con las que aparece al filtrar el home.
   final Set<GameVibe> vibes;
+
+  /// Pasos de "¿Cómo se juega?" (se muestran en la hoja de ayuda).
+  final List<String> rules;
 
   /// `true` si el grupo actual cabe en el rango de jugadores del juego.
   bool fitsPlayers(int players) =>

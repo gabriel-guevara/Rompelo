@@ -19,11 +19,24 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  /// 1 ronda × 2 equipos × 3 cartas = 6 aciertos para terminar.
+  Future<void> tapKey(WidgetTester tester, String key) async {
+    await tester.tap(find.byKey(ValueKey(key)));
+    await tester.pumpAndSettle();
+  }
+
+  /// 1 ronda × 2 equipos: cada turno, listo → 3 aciertos → fin del turno
+  /// (desde la pausa: en los tests el reloj no corre) → siguiente.
   Future<void> playCharadesRound(WidgetTester tester) async {
-    for (var i = 0; i < 6; i++) {
-      await tester.tap(find.byKey(const ValueKey('charades-correct')));
+    for (var team = 0; team < 2; team++) {
+      await tapKey(tester, 'charades-ready');
+      for (var i = 0; i < 3; i++) {
+        await tapKey(tester, 'charades-correct');
+      }
+      await tester.tap(find.byIcon(Icons.pause_rounded));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Terminar turno'));
+      await tester.pumpAndSettle();
+      await tapKey(tester, 'charades-next-turn');
     }
   }
 
@@ -55,7 +68,8 @@ void main() {
     expect(currentPath(container), '/resultados');
     expect(find.text('¡Partida finalizada!'), findsOneWidget);
     final first = container.read(lastMatchResultProvider)!;
-    expect(first.scores.map((s) => s.points), [3, 3]);
+    expect(first.plays, 6);
+    expect(first.scores.every((s) => s.points >= 3), isTrue);
 
     // 4. Revancha: misma configuración (1 ronda), marcador nuevo.
     await tapVisible(tester, find.text('¡Jugar revancha inmediata!'));

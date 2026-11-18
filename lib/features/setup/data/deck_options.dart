@@ -7,19 +7,15 @@ class DeckOption {
     required this.id,
     required this.title,
     required this.subtitle,
-    this.icon,
-    this.emoji,
+    required this.icon,
     this.badge,
     this.adult = false,
-  }) : assert(icon != null || emoji != null);
+  });
 
   final String id;
   final String title;
   final String subtitle;
-  final IconData? icon;
-
-  /// Alternativa al icono (el mockup del Impostor usa emoji).
-  final String? emoji;
+  final IconData icon;
 
   /// Insignia corta: "Popular", "+18"…
   final String? badge;
@@ -46,21 +42,40 @@ const List<DeckOption> charadesDecks = [
   DeckOption(
     id: 'viral',
     title: 'Películas & series virales',
-    subtitle: '140 cartas listas para interpretar',
+    subtitle: '42 cartas listas para interpretar',
     icon: Icons.movie_rounded,
     badge: 'Popular',
   ),
   DeckOption(
     id: 'memes',
     title: 'Famosos & memes absurdos',
-    subtitle: '95 momentos de la cultura pop',
+    subtitle: '42 momentos de la cultura pop',
     icon: Icons.sentiment_very_satisfied_rounded,
   ),
   DeckOption(
     id: 'mimica',
     title: 'Acciones imposibles & mímica extrema',
-    subtitle: '110 retos solo con cuerpo y gestos',
+    subtitle: '42 retos solo con cuerpo y gestos',
     icon: Icons.sports_kabaddi_rounded,
+  ),
+  DeckOption(
+    id: 'animales',
+    title: 'Reino animal',
+    subtitle: '42 animales para imitar',
+    icon: Icons.pets_rounded,
+    badge: 'Niños',
+  ),
+  DeckOption(
+    id: 'profesiones',
+    title: 'Oficios & profesiones',
+    subtitle: '42 trabajos de todo tipo',
+    icon: Icons.work_rounded,
+  ),
+  DeckOption(
+    id: 'deportes',
+    title: 'Deportes & campeones',
+    subtitle: '42 disciplinas en movimiento',
+    icon: Icons.sports_soccer_rounded,
   ),
 ];
 
@@ -203,34 +218,40 @@ const List<DeckOption> impostorDecks = [
   DeckOption(
     id: 'comida',
     title: 'Comida & antojos de fiesta',
-    subtitle: 'Tacos, fondue, sushi y snacks',
-    emoji: '🍔',
+    subtitle: 'Tacos, arepas, sushi y snacks · 30 palabras',
+    icon: Icons.fastfood_rounded,
   ),
   DeckOption(
     id: 'objetos',
     title: 'Objetos cotidianos raros',
-    subtitle: 'Quitapelusas, sacacorchos, pantufla',
-    emoji: '🛋️',
+    subtitle: 'Quitapelusas, sacacorchos, pantufla · 30 palabras',
+    icon: Icons.chair_rounded,
   ),
   DeckOption(
     id: 'lugares',
     title: 'Lugares del mundo y viajes',
-    subtitle: 'Aeropuertos, ruinas y playas secretas',
-    emoji: '✈️',
+    subtitle: 'Aeropuertos, ruinas y playas · 30 palabras',
+    icon: Icons.flight_rounded,
+  ),
+  DeckOption(
+    id: 'animales',
+    title: 'Animales del planeta',
+    subtitle: 'Mascotas, selva y océano · 30 palabras',
+    icon: Icons.pets_rounded,
+  ),
+  DeckOption(
+    id: 'profesiones',
+    title: 'Profesiones y oficios',
+    subtitle: 'Del médico al mago · 30 palabras',
+    icon: Icons.work_rounded,
   ),
   DeckOption(
     id: 'picante',
     title: 'Modo picante',
-    subtitle: 'Citas incómodas, confesiones y secretos',
-    emoji: '🌶️',
+    subtitle: 'Citas incómodas, confesiones y secretos · 30 palabras',
+    icon: Icons.local_fire_department_rounded,
     badge: '+18',
     adult: true,
   ),
 ];
 
-/// Avatares emoji de los jugadores (se repiten si hay más de 8).
-const List<String> playerEmojis = [
-  '👑', '🐱', '🍕', '🚀', '🥑', '👾', '🦊', '⚡', //
-];
-
-String playerEmoji(int index) => playerEmojis[index % playerEmojis.length];

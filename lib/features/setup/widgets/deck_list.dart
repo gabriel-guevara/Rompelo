@@ -38,7 +38,6 @@ class DeckList extends StatelessWidget {
             title: deck.title,
             subtitle: deck.subtitle,
             icon: deck.icon,
-            emoji: deck.emoji,
             badge: deck.badge,
             // Los mazos +18 se tiñen de vino aunque el juego sea azul.
             badgeColor: deck.adult ? AppColors.secondary : null,

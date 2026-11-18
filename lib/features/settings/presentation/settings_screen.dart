@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/feedback/game_feedback.dart';
 import '../../../core/widgets/chunky_button.dart';
 import '../../../core/widgets/rompelo_app_bar.dart';
 import '../../games/providers/match_result_provider.dart';
@@ -46,21 +47,32 @@ class SettingsScreen extends ConsumerWidget {
                     title: 'Sonidos',
                     subtitle: 'Pitidos al acertar y al acabar el tiempo',
                     value: settings.sounds,
-                    onChanged: notifier.setSounds,
+                    onChanged: (on) {
+                      notifier.setSounds(on);
+                      // Muestra de cómo suena al activarlo.
+                      if (on) {
+                        ref.read(gameFeedbackProvider).sound(GameSound.correct);
+                      }
+                    },
                     accent: AppColors.primary,
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   RuleSwitch(
                     title: 'Vibración',
-                    subtitle: 'Aviso háptico al cambiar de turno',
+                    subtitle: 'Aviso háptico al acertar y cambiar de turno',
                     value: settings.vibration,
-                    onChanged: notifier.setVibration,
+                    onChanged: (on) {
+                      notifier.setVibration(on);
+                      if (on) {
+                        ref.read(gameFeedbackProvider).vibrate(Haptic.medium);
+                      }
+                    },
                     accent: AppColors.primary,
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   RuleSwitch(
                     title: 'Pantalla siempre encendida',
-                    subtitle: 'Que no se apague en plena charada',
+                    subtitle: 'Que no se apague durante una partida',
                     value: settings.keepScreenOn,
                     onChanged: notifier.setKeepScreenOn,
                     accent: AppColors.primary,
@@ -95,7 +107,8 @@ class SettingsScreen extends ConsumerWidget {
               ConfigSection(
                 title: 'Acerca de Rómpelo',
                 subtitle: 'Versión $version',
-                trailing: const Text('✨', style: TextStyle(fontSize: 22)),
+                trailing: const Icon(Icons.auto_awesome_rounded,
+                    color: AppColors.secondary),
                 children: [
                   Text(
                     'Rómpelo funciona 100 % offline y sin registro: nada de lo '

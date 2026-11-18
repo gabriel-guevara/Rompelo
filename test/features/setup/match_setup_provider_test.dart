@@ -17,6 +17,25 @@ void main() {
     expect(container.read(impostorSetupProvider).players, 9);
   });
 
+  test('el mazo personalizado limpia vacías y repetidas', () {
+    container
+        .read(charadesSetupProvider.notifier)
+        .setCustomWords(['  El tío ', '', 'el TÍO', 'La profe', '   ']);
+    expect(container.read(charadesSetupProvider).customWords,
+        ['El tío', 'La profe']);
+  });
+
+  test('charadas: dificultad e inclinación se guardan', () {
+    final notifier = container.read(charadesSetupProvider.notifier);
+    expect(container.read(charadesSetupProvider).difficulty,
+        CharadesDifficulty.mixed);
+    notifier.setDifficulty(CharadesDifficulty.hard);
+    notifier.setTiltControls(false);
+    final setup = container.read(charadesSetupProvider);
+    expect(setup.difficulty, CharadesDifficulty.hard);
+    expect(setup.tiltControls, isFalse);
+  });
+
   test('sigue los cambios del home sin perder el resto de ajustes', () {
     final charades = container.read(charadesSetupProvider.notifier);
     charades.setTurnSeconds(90);

@@ -19,6 +19,7 @@ import '../widgets/config_section.dart';
 import '../widgets/deck_list.dart';
 import '../widgets/game_config_hero.dart';
 import '../widgets/player_names_editor.dart';
+import '../widgets/team_names_row.dart';
 import 'config_feedback.dart';
 
 /// Configuración de Charadas (`/configurar/charadas`), mockup
@@ -105,30 +106,9 @@ class CharadesConfigScreen extends ConsumerWidget {
             if (setup.mode == CharadesMode.teams) ...[
               const SectionHeader(title: 'Nombres de bandos rivales'),
               const SizedBox(height: AppSpacing.xs),
-              Row(
-                children: [
-                  Expanded(
-                    child: _TeamNameCard(
-                      label: 'Equipo A',
-                      icon: Icons.wine_bar_rounded,
-                      color: AppColors.secondary,
-                      tint: AppColors.secondaryFixed,
-                      name: setup.teamNames[0],
-                      onChanged: (name) => notifier.renameTeam(0, name),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: _TeamNameCard(
-                      label: 'Equipo B',
-                      icon: Icons.bubble_chart_rounded,
-                      color: AppColors.primary,
-                      tint: AppColors.primaryFixed,
-                      name: setup.teamNames[1],
-                      onChanged: (name) => notifier.renameTeam(1, name),
-                    ),
-                  ),
-                ],
+              TeamNamesRow(
+                names: setup.teamNames,
+                onRename: notifier.renameTeam,
               ),
             ] else ...[
               const SectionHeader(title: 'Nombres de jugadores'),
@@ -161,8 +141,16 @@ class CharadesConfigScreen extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.sm),
             _CustomDeckTile(
-              onTap: () => showConfigMessage(
-                  context, 'Los mazos personalizados llegan pronto'),
+              count: setup.customWords.length,
+              onTap: () async {
+                final words = await showModalBottomSheet<List<String>>(
+                  context: context,
+                  isScrollControlled: true,
+                  showDragHandle: true,
+                  builder: (_) => _CustomDeckSheet(initial: setup.customWords),
+                );
+                if (words != null) notifier.setCustomWords(words);
+              },
             ),
           ],
         ),
@@ -201,6 +189,32 @@ class CharadesConfigScreen extends ConsumerWidget {
                 semanticName: 'rondas',
                 onChanged: notifier.setRounds,
               ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            OptionLabel(
+              label: 'Dificultad de las cartas',
+              value: switch (setup.difficulty) {
+                CharadesDifficulty.easy => '1 punto por carta',
+                CharadesDifficulty.medium => '2 puntos por carta',
+                CharadesDifficulty.hard => '3 puntos por carta',
+                CharadesDifficulty.mixed => '1, 2 o 3 puntos',
+              },
+            ),
+            SegmentedPills<CharadesDifficulty>(
+              key: const ValueKey('charades-difficulty'),
+              options: [
+                for (final d in CharadesDifficulty.values)
+                  SegmentOption(value: d, label: d.label),
+              ],
+              selected: setup.difficulty,
+              onChanged: notifier.setDifficulty,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            RuleSwitch(
+              title: 'Control por inclinación',
+              subtitle: 'Móvil en la frente: abajo = acierto, arriba = pasar',
+              value: setup.tiltControls,
+              onChanged: notifier.setTiltControls,
             ),
           ],
         ),
@@ -262,102 +276,13 @@ class _TiltTip extends StatelessWidget {
   }
 }
 
-/// Tarjeta "Equipo A / Team Vino" con su campo de texto.
-///
-/// Es `StatefulWidget` porque el `TextEditingController` debe vivir mientras
-/// la tarjeta exista (si se creara en `build`, se perdería el cursor en cada
-/// tecla).
-class _TeamNameCard extends StatefulWidget {
-  const _TeamNameCard({
-    required this.label,
-    required this.icon,
-    required this.color,
-    required this.tint,
-    required this.name,
-    required this.onChanged,
-  });
-
-  final String label;
-  final IconData icon;
-  final Color color;
-  final Color tint;
-  final String name;
-  final ValueChanged<String> onChanged;
-
-  @override
-  State<_TeamNameCard> createState() => _TeamNameCardState();
-}
-
-class _TeamNameCardState extends State<_TeamNameCard> {
-  late final TextEditingController _controller =
-      TextEditingController(text: widget.name);
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.sm),
-      decoration: BoxDecoration(
-        color: widget.tint.withValues(alpha: 0.5),
-        borderRadius: AppRadius.inner,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 10,
-                height: 10,
-                decoration:
-                    BoxDecoration(color: widget.color, shape: BoxShape.circle),
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(widget.label,
-                    style: textTheme.labelSmall?.copyWith(color: widget.color)),
-              ),
-              Icon(widget.icon, size: 18, color: widget.color),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          TextField(
-            controller: _controller,
-            onChanged: widget.onChanged,
-            maxLength: 16,
-            style: textTheme.labelLarge,
-            decoration: const InputDecoration(
-              counterText: '',
-              isDense: true,
-              filled: true,
-              fillColor: AppColors.surfaceContainerLowest,
-              contentPadding:
-                  // 13 px arriba/abajo: el campo llega a 48 px de alto.
-                  EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-              border: OutlineInputBorder(
-                borderRadius: AppRadius.pill,
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 /// Acceso al futuro "Mazo personalizado rápido" (borde punteado en el
 /// mockup; aquí borde sólido suave).
 class _CustomDeckTile extends StatelessWidget {
-  const _CustomDeckTile({required this.onTap});
+  const _CustomDeckTile({required this.count, required this.onTap});
 
+  /// Palabras propias ya guardadas (0 = mazo vacío).
+  final int count;
   final VoidCallback onTap;
 
   @override
@@ -394,9 +319,16 @@ class _CustomDeckTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('+ Mazo personalizado rápido',
+                    Text(
+                        count == 0
+                            ? '+ Mazo personalizado rápido'
+                            : 'Mazo personalizado ($count)',
                         style: textTheme.labelLarge),
-                    Text('Agrega chistes internos de tus amigos',
+                    Text(
+                        count == 0
+                            ? 'Agrega chistes internos de tus amigos'
+                            : 'Se mezclan con los mazos elegidos · Toca '
+                                'para editar',
                         style: textTheme.bodySmall),
                   ],
                 ),
@@ -406,6 +338,89 @@ class _CustomDeckTile extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Hoja para escribir el mazo personalizado: una palabra o frase por línea.
+/// Devuelve la lista al guardar (o `null` si se cierra sin guardar).
+class _CustomDeckSheet extends StatefulWidget {
+  const _CustomDeckSheet({required this.initial});
+
+  final List<String> initial;
+
+  @override
+  State<_CustomDeckSheet> createState() => _CustomDeckSheetState();
+}
+
+class _CustomDeckSheetState extends State<_CustomDeckSheet> {
+  late final TextEditingController _controller =
+      TextEditingController(text: widget.initial.join('\n'));
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  List<String> get _words => _controller.text.split('\n');
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Padding(
+      // Sube la hoja por encima del teclado.
+      padding: EdgeInsets.fromLTRB(AppSpacing.margin, 0, AppSpacing.margin,
+          MediaQuery.viewInsetsOf(context).bottom + AppSpacing.md),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text('Mazo personalizado', style: textTheme.headlineSmall),
+          const SizedBox(height: 4),
+          Text(
+            'Escribe una palabra o frase por línea (máximo '
+            '${CharadesSetup.maxCustomWords}). Se guardan mientras la app '
+            'esté abierta.',
+            style: textTheme.bodySmall,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          TextField(
+            key: const ValueKey('custom-deck-field'),
+            controller: _controller,
+            autofocus: widget.initial.isEmpty,
+            minLines: 5,
+            maxLines: 8,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: const InputDecoration(
+              hintText: 'El tío bailando\nLa profe de mate\n…',
+              filled: true,
+              fillColor: AppColors.surfaceContainerLowest,
+              border: OutlineInputBorder(
+                borderRadius: AppRadius.inner,
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          ChunkyButton(
+            label: 'Guardar mazo',
+            leadingIcon: Icons.check_rounded,
+            height: 52,
+            onPressed: () => Navigator.of(context).pop(_words),
+          ),
+          if (widget.initial.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.xs),
+            ChunkyButton(
+              label: 'Vaciar mazo',
+              height: 44,
+              variant: ChunkyButtonVariant.ghost,
+              onPressed: () => Navigator.of(context).pop(const <String>[]),
+            ),
+          ],
+        ],
       ),
     );
   }

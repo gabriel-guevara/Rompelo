@@ -45,7 +45,7 @@ void main() {
     expect(find.text('Configurar y jugar'), findsNWidgets(3));
     expect(find.text('¿No saben qué elegir?'), findsOneWidget);
     expect(find.text('3 juegos listos'), findsOneWidget);
-    expect(find.text('Mesa 4'), findsOneWidget);
+    expect(find.byKey(const ValueKey('how-to-play')), findsOneWidget);
   });
 
   testWidgets('"Configurar y jugar" navega a la configuración del juego',
@@ -62,7 +62,7 @@ void main() {
   testWidgets('los chips de vibra filtran el catálogo', (tester) async {
     await pumpHome(tester);
 
-    await tester.tap(find.text('🕵️ Misterio'));
+    await tester.tap(find.text('Misterio'));
     await tester.pumpAndSettle();
     expect(find.text('El impostor silencioso'), findsOneWidget);
     expect(find.text('Charadas alocadas'), findsNothing);
@@ -104,5 +104,17 @@ void main() {
 
     expect(find.text('Mesa 2'), findsOneWidget);
     expect(find.text('Mesa 4'), findsNothing);
+  });
+
+  testWidgets('"¿Cómo se juega?" muestra las reglas de los 3 juegos',
+      (tester) async {
+    await pumpHome(tester);
+
+    await tester.tap(find.byKey(const ValueKey('how-to-play')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('¿Cómo se juega?'), findsOneWidget);
+    expect(find.textContaining('Pasen el móvil'), findsOneWidget);
+    expect(find.textContaining('robar el turno'), findsOneWidget);
   });
 }

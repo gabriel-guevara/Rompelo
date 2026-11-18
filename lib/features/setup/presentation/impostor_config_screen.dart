@@ -7,6 +7,7 @@ import '../../../core/constants/app_spacing.dart';
 import '../../../core/widgets/chunky_button.dart';
 import '../../../core/widgets/counter_stepper.dart';
 import '../../../core/widgets/pill_chip.dart';
+import '../../../core/widgets/player_avatar.dart';
 import '../../../core/widgets/segmented_pills.dart';
 import '../../catalog/data/games_catalog.dart';
 import '../data/deck_options.dart';
@@ -183,7 +184,7 @@ class ImpostorConfigScreen extends ConsumerWidget {
   }
 }
 
-/// "👑🐱🍕🚀 +4 listos en el sofá": avatares superpuestos de la cabecera.
+/// "4 avatares +2 listos en el sofá": avatares superpuestos de la cabecera.
 class _ReadyAvatars extends StatelessWidget {
   const _ReadyAvatars({required this.players});
 
@@ -208,18 +209,10 @@ class _ReadyAvatars extends StatelessWidget {
               for (var i = 0; i < shown; i++)
                 Positioned(
                   left: i * (_size - _overlap),
-                  child: Container(
-                    width: _size,
-                    height: _size,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerLowest,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: AppColors.surfaceContainer, width: 2),
-                    ),
-                    child: Text(playerEmoji(i),
-                        style: const TextStyle(fontSize: 16)),
+                  child: PlayerAvatar(
+                    index: i,
+                    size: _size,
+                    border: AppColors.surfaceContainerLowest,
                   ),
                 ),
             ],

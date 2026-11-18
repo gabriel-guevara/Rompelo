@@ -27,6 +27,18 @@ const List<GameItem> gamesCatalog = [
     accent: GameAccent.wine,
     ctaIcon: Icons.play_arrow_rounded,
     vibes: {GameVibe.fiesta, GameVibe.chill},
+    rules: [
+      'Elijan modo: por equipos o todos contra todos.',
+      'En su turno, un jugador se pone el móvil en la frente con la pantalla '
+          'hacia su grupo.',
+      'El grupo actúa o da pistas sin decir la palabra, y el jugador intenta '
+          'adivinarla.',
+      'Inclina el móvil hacia abajo (o toca ¡Acierto!) si adivinó, y hacia '
+          'arriba (o Pasar) para saltar la carta.',
+      'Fácil vale 1 punto, media 2 y difícil 3. Pasar puede restar 1.',
+      'Jueguen todas las cartas que puedan antes de que se acabe el tiempo. '
+          'Gana quien más puntos sume.',
+    ],
   ),
   GameItem(
     id: 'impostor',
@@ -47,6 +59,20 @@ const List<GameItem> gamesCatalog = [
     accent: GameAccent.sky,
     ctaIcon: Icons.fingerprint_rounded,
     vibes: {GameVibe.misterio, GameVibe.chill},
+    rules: [
+      'Pasen el móvil: cada uno mantiene presionado para ver su rol en '
+          'secreto.',
+      'Todos ven la misma palabra secreta, menos el impostor, que solo '
+          'conoce el tema.',
+      'Por turnos, cada uno pregunta o da una pista sobre la palabra sin '
+          'decirla.',
+      'Al terminar el debate, voten en voz alta y marquen a quién acusan. '
+          'Si es inocente, queda eliminado y siguen debatiendo.',
+      'Los impostores ganan si quedan tantos como ciudadanos.',
+      'Si atrapan al impostor, aún puede ganar si adivina la palabra.',
+      'Ciudadanos: +1 si ganan. Impostor: +2 si escapa y +3 si adivina. '
+          'Jueguen las rondas que quieran.',
+    ],
   ),
   GameItem(
     id: 'trivia',
@@ -68,6 +94,17 @@ const List<GameItem> gamesCatalog = [
     accent: GameAccent.warm,
     ctaIcon: Icons.bolt_rounded,
     vibes: {GameVibe.reflejos, GameVibe.fiesta},
+    rules: [
+      'Elijan modo: dos equipos con pulsador o turnos individuales.',
+      'Lean la pregunta en voz alta y elijan una opción antes de que se '
+          'acabe el tiempo.',
+      'Confirmen la respuesta: si es correcta, suman puntos (la última '
+          'pregunta puede valer doble).',
+      'En modo equipos pueden robar el turno una vez por pregunta, pero '
+          'fallar resta puntos.',
+      'Gana quien llegue primero a la meta de puntos o vaya arriba al '
+          'terminar las preguntas.',
+    ],
   ),
 ];
 

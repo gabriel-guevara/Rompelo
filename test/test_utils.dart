@@ -1,10 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rompelo_app/app.dart';
+import 'package:rompelo_app/core/feedback/game_feedback.dart';
+import 'package:rompelo_app/core/feedback/keep_screen_on.dart';
 import 'package:rompelo_app/core/router/app_router.dart';
 import 'package:rompelo_app/features/games/providers/match_result_provider.dart';
+import 'package:rompelo_app/features/games/providers/shuffled_deck.dart';
 
 /// Monta la app real en [location] con los timers de partida apagados y un
 /// viewport alto (la fuente de test dibuja cada letra de 1 em; ver
@@ -19,6 +24,7 @@ Future<ProviderContainer> pumpAppAt(
   void Function(ProviderContainer container)? prepare,
   List<Override> overrides = const [],
   Size size = const Size(800, 2400),
+  void Function(bool on)? screenWake,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -27,6 +33,12 @@ Future<ProviderContainer> pumpAppAt(
   await tester.pumpWidget(ProviderScope(
     overrides: [
       liveTimersEnabledProvider.overrideWithValue(false),
+      tiltSensorEnabledProvider.overrideWithValue(false),
+      // Sin plugins nativos en los tests: audio y bloqueo de pantalla mudos.
+      soundPlayerProvider.overrideWithValue(const SilentSoundPlayer()),
+      screenWakeProvider.overrideWithValue(screenWake ?? (_) {}),
+      // Azar con semilla: mazos e impostores salen igual en cada ejecución.
+      gameRandomProvider.overrideWithValue(Random(7)),
       ...overrides,
     ],
     child: const RompeloApp(),

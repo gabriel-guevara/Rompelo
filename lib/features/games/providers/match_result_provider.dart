@@ -25,3 +25,7 @@ final lastMatchResultProvider =
 /// un timer que corre sin parar programa frames sin fin y `pumpAndSettle`
 /// nunca terminaría de "asentarse".
 final liveTimersEnabledProvider = Provider<bool>((ref) => true);
+
+/// Interruptor del acelerómetro de Charadas (los tests lo apagan: en el
+/// entorno de test no hay sensores).
+final tiltSensorEnabledProvider = Provider<bool>((ref) => true);

@@ -40,6 +40,18 @@ sealed class MatchSetup {
 
 enum CharadesMode { teams, freeForAll }
 
+/// Filtro de dificultad de las cartas (`mixed` = todas).
+enum CharadesDifficulty {
+  easy('Fácil'),
+  medium('Media'),
+  hard('Difícil'),
+  mixed('Mezcla');
+
+  const CharadesDifficulty(this.label);
+
+  final String label;
+}
+
 final class CharadesSetup extends MatchSetup {
   const CharadesSetup({
     required super.players,
@@ -50,6 +62,9 @@ final class CharadesSetup extends MatchSetup {
     this.turnSeconds = 60,
     this.penaltyOnPass = true,
     this.rounds = 3,
+    this.difficulty = CharadesDifficulty.mixed,
+    this.tiltControls = true,
+    this.customWords = const [],
   });
 
   /// Valores por defecto del mockup: listos para jugar en ≤ 3 toques.
@@ -71,6 +86,16 @@ final class CharadesSetup extends MatchSetup {
   final int turnSeconds;
   final bool penaltyOnPass;
   final int rounds;
+  final CharadesDifficulty difficulty;
+
+  /// Girar el móvil en la frente marca Acierto/Pasar (acelerómetro).
+  final bool tiltControls;
+
+  /// Palabras propias del grupo ("Mazo personalizado rápido"); si hay,
+  /// se suman a los mazos elegidos. Solo viven durante la sesión.
+  final List<String> customWords;
+
+  static const int maxCustomWords = 50;
 
   CharadesSetup withPlayers(int value) {
     final count = clampPlayers(value);
@@ -89,6 +114,9 @@ final class CharadesSetup extends MatchSetup {
     int? turnSeconds,
     bool? penaltyOnPass,
     int? rounds,
+    CharadesDifficulty? difficulty,
+    bool? tiltControls,
+    List<String>? customWords,
   }) {
     return CharadesSetup(
       players: players ?? this.players,
@@ -99,6 +127,9 @@ final class CharadesSetup extends MatchSetup {
       turnSeconds: turnSeconds ?? this.turnSeconds,
       penaltyOnPass: penaltyOnPass ?? this.penaltyOnPass,
       rounds: rounds ?? this.rounds,
+      difficulty: difficulty ?? this.difficulty,
+      tiltControls: tiltControls ?? this.tiltControls,
+      customWords: customWords ?? this.customWords,
     );
   }
 }
@@ -113,6 +144,7 @@ final class TriviaSetup extends MatchSetup {
     required super.playerNames,
     required super.selectedDecks,
     this.answerMode = TriviaAnswerMode.buzzer,
+    this.teamNames = const ['Team Vino', 'Team Burbujas'],
     this.questionSeconds = 15,
     this.doublePointsLastRound = true,
     this.targetPoints = 500,
@@ -138,6 +170,9 @@ final class TriviaSetup extends MatchSetup {
   int get minDecks => 2;
 
   final TriviaAnswerMode answerMode;
+
+  /// Los 2 equipos del modo "Pulsador en pantalla".
+  final List<String> teamNames;
   final int questionSeconds;
   final bool doublePointsLastRound;
   final int targetPoints;
@@ -155,6 +190,7 @@ final class TriviaSetup extends MatchSetup {
     List<String>? playerNames,
     Set<String>? selectedDecks,
     TriviaAnswerMode? answerMode,
+    List<String>? teamNames,
     int? questionSeconds,
     bool? doublePointsLastRound,
     int? targetPoints,
@@ -164,6 +200,7 @@ final class TriviaSetup extends MatchSetup {
       playerNames: playerNames ?? this.playerNames,
       selectedDecks: selectedDecks ?? this.selectedDecks,
       answerMode: answerMode ?? this.answerMode,
+      teamNames: teamNames ?? this.teamNames,
       questionSeconds: questionSeconds ?? this.questionSeconds,
       doublePointsLastRound:
           doublePointsLastRound ?? this.doublePointsLastRound,
@@ -244,6 +281,18 @@ final class ImpostorSetup extends MatchSetup {
 const List<String> _suggestedNames = [
   'Mateo', 'Clara', 'David', 'Sofi', 'Lucas', 'Ana', 'Nico', 'Val', //
 ];
+
+/// Nombres listos para jugar: un nombre borrado en la config no deja un
+/// hueco en el marcador ("Equipo A", "Jugador 3").
+List<String> displayTeamNames(List<String> names) => [
+      for (final (i, name) in names.indexed)
+        name.trim().isEmpty ? 'Equipo ${String.fromCharCode(65 + i)}' : name.trim(),
+    ];
+
+List<String> displayPlayerNames(List<String> names) => [
+      for (final (i, name) in names.indexed)
+        name.trim().isEmpty ? 'Jugador ${i + 1}' : name.trim(),
+    ];
 
 String defaultPlayerName(int index) => index < _suggestedNames.length
     ? _suggestedNames[index]

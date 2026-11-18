@@ -33,14 +33,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   GameVibe? _vibe;
   int _table = 4;
 
-  void _pickRandomGame() {
-    final game = pickRandomGame(players: ref.read(playerCountProvider));
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text('¡Tocó ${game.title}!')));
-    context.go(game.configPath);
-  }
-
   Future<void> _chooseTable() async {
     final table = await showModalBottomSheet<int>(
       context: context,
@@ -51,6 +43,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (table != null) setState(() => _table = table);
   }
 
+  void _pickRandomGame() {
+    final game = pickRandomGame(players: ref.read(playerCountProvider));
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('¡Tocó ${game.title}!')));
+    context.go(game.configPath);
+  }
+
   @override
   Widget build(BuildContext context) {
     // `watch` reconstruye el home cada vez que cambia el provider.
@@ -58,17 +58,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final games = gamesByVibe(_vibe);
 
     return Scaffold(
-      appBar: RompeloAppBar(
-        actions: [
-          _BellButton(
-            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('No hay novedades por ahora')),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.xs),
-          const RompeloAvatar(),
-        ],
-      ),
+      appBar: const RompeloAppBar(),
       body: Center(
         child: ConstrainedBox(
           constraints:
@@ -198,7 +188,7 @@ class _WelcomeBar extends StatelessWidget {
   }
 }
 
-/// Hoja inferior para elegir la mesa (dato decorativo: no hay backend).
+/// Hoja inferior para elegir la mesa.
 class _TableSheet extends StatelessWidget {
   const _TableSheet({required this.selected});
 
@@ -236,7 +226,7 @@ class _TableSheet extends StatelessWidget {
   }
 }
 
-/// Carrusel horizontal de chips "Todos · 🎉 Fiesta total · …".
+/// Carrusel horizontal de chips "Todos · Fiesta total · …".
 class _VibeFilter extends StatelessWidget {
   const _VibeFilter({required this.selected, required this.onSelected});
 
@@ -258,7 +248,9 @@ class _VibeFilter extends StatelessWidget {
           for (final vibe in GameVibe.values) ...[
             const SizedBox(width: AppSpacing.xs),
             PillChip(
-              label: vibe.chipLabel,
+              label: vibe.label,
+              icon: vibe.icon,
+              iconColor: AppColors.secondary,
               selected: vibe == selected,
               onTap: () => onSelected(vibe),
             ),
@@ -295,31 +287,3 @@ class _CountBadge extends StatelessWidget {
   }
 }
 
-/// Campana del header (decorativa: la app no tiene notificaciones reales).
-class _BellButton extends StatelessWidget {
-  const _BellButton({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChunkyPressable(
-      onTap: onTap,
-      semanticLabel: 'Notificaciones',
-      builder: (context, pressed) => AnimatedScale(
-        scale: pressed ? 0.95 : 1,
-        duration: kChunkyPressDuration,
-        child: Container(
-          width: 40,
-          height: 40,
-          decoration: const BoxDecoration(
-            color: AppColors.surfaceContainerLow,
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(Icons.notifications_none_rounded,
-              size: 20, color: AppColors.onSurfaceVariant),
-        ),
-      ),
-    );
-  }
-}

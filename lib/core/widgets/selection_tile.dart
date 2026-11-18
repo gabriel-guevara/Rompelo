@@ -14,7 +14,6 @@ class SelectionTile extends StatelessWidget {
     required this.onTap,
     this.subtitle,
     this.icon,
-    this.emoji,
     this.badge,
     this.badgeColor,
     this.activeColor = AppColors.secondary,
@@ -25,9 +24,6 @@ class SelectionTile extends StatelessWidget {
   final String title;
   final String? subtitle;
   final IconData? icon;
-
-  /// Alternativa a [icon] (mazos con emoji del mockup del Impostor).
-  final String? emoji;
 
   /// Insignia corta junto al título, p. ej. "Popular".
   final String? badge;
@@ -77,10 +73,9 @@ class SelectionTile extends StatelessWidget {
             ),
             child: Row(
               children: [
-                if (icon != null || emoji != null) ...[
+                if (icon != null) ...[
                   _IconBox(
-                    icon: icon,
-                    emoji: emoji,
+                    icon: icon!,
                     selected: selected,
                     color: activeColor,
                     shadow: activeShadow,
@@ -131,14 +126,12 @@ class SelectionTile extends StatelessWidget {
 class _IconBox extends StatelessWidget {
   const _IconBox({
     required this.icon,
-    required this.emoji,
     required this.selected,
     required this.color,
     required this.shadow,
   });
 
-  final IconData? icon;
-  final String? emoji;
+  final IconData icon;
   final bool selected;
   final Color color;
   final Color shadow;
@@ -155,13 +148,11 @@ class _IconBox extends StatelessWidget {
         boxShadow: selected ? chunkyShadow(shadow, 3) : null,
       ),
       alignment: Alignment.center,
-      child: emoji != null
-          ? Text(emoji!, style: const TextStyle(fontSize: 24))
-          : Icon(
-              icon,
-              size: 24,
-              color: selected ? Colors.white : AppColors.onSurfaceVariant,
-            ),
+      child: Icon(
+        icon,
+        size: 24,
+        color: selected ? Colors.white : AppColors.onSurfaceVariant,
+      ),
     );
   }
 }

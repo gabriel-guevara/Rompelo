@@ -19,6 +19,8 @@ import '../widgets/config_scaffold.dart';
 import '../widgets/config_section.dart';
 import '../widgets/pack_picker.dart';
 import '../widgets/game_config_hero.dart';
+import '../widgets/player_names_editor.dart';
+import '../widgets/team_names_row.dart';
 import 'config_feedback.dart';
 
 /// Configuración de Trivia (`/configurar/trivia`), mockup
@@ -158,6 +160,21 @@ class TriviaConfigScreen extends ConsumerWidget {
                 ],
               ),
             ),
+            const SizedBox(height: AppSpacing.md),
+            SectionHeader(
+                title: isBuzzer ? 'Nombres de los equipos' : 'Nombres de jugadores'),
+            const SizedBox(height: AppSpacing.xs),
+            if (isBuzzer)
+              TeamNamesRow(
+                names: setup.teamNames,
+                onRename: notifier.renameTeam,
+              )
+            else
+              PlayerNamesEditor(
+                names: setup.playerNames,
+                tint: AppColors.primaryFixed.withValues(alpha: 0.6),
+                onRename: notifier.renamePlayer,
+              ),
           ],
         ),
                 Column(

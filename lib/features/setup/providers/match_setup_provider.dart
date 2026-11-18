@@ -48,6 +48,25 @@ class CharadesSetupNotifier extends Notifier<CharadesSetup> {
 
   void setRounds(int rounds) => state = state.copyWith(
       rounds: rounds.clamp(CharadesSetup.minRounds, CharadesSetup.maxRounds));
+
+  void setDifficulty(CharadesDifficulty value) =>
+      state = state.copyWith(difficulty: value);
+
+  void setTiltControls(bool value) =>
+      state = state.copyWith(tiltControls: value);
+
+  /// Guarda las palabras del mazo personalizado: sin vacías ni repetidas
+  /// (ignorando mayúsculas) y como máximo [CharadesSetup.maxCustomWords].
+  void setCustomWords(Iterable<String> words) {
+    final seen = <String>{};
+    final clean = [
+      for (final raw in words)
+        if (raw.trim() case final word
+            when word.isNotEmpty && seen.add(word.toLowerCase()))
+          word,
+    ].take(CharadesSetup.maxCustomWords).toList();
+    state = state.copyWith(customWords: clean);
+  }
 }
 
 class TriviaSetupNotifier extends Notifier<TriviaSetup> {
@@ -75,6 +94,12 @@ class TriviaSetupNotifier extends Notifier<TriviaSetup> {
 
   void setAnswerMode(TriviaAnswerMode mode) =>
       state = state.copyWith(answerMode: mode);
+
+  void renamePlayer(int index, String name) => state =
+      state.copyWith(playerNames: [...state.playerNames]..[index] = name);
+
+  void renameTeam(int index, String name) =>
+      state = state.copyWith(teamNames: [...state.teamNames]..[index] = name);
 
   void setQuestionSeconds(int seconds) =>
       state = state.copyWith(questionSeconds: seconds);

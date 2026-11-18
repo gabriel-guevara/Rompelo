@@ -63,16 +63,20 @@ class Podium extends StatelessWidget {
 /// Cada puesto con su altura, colores y textos. Un enum "rico" en lugar de
 /// tres `if` repartidos por el `build`.
 enum _Place {
-  gold(1, '¡Campeones!', '👑', 160, 80),
-  silver(2, 'Plata', '🥈', 112, 64),
-  bronze(3, 'Bronce', '🥉', 80, 64);
+  gold(1, '¡Campeones!', Icons.workspace_premium_rounded, Color(0xFFC9971C),
+      160, 80),
+  silver(2, 'Plata', Icons.military_tech_rounded, Color(0xFF7D8794), 112, 64),
+  bronze(3, 'Bronce', Icons.military_tech_rounded, Color(0xFFA0613A), 80, 64);
 
-  const _Place(
-      this.number, this.label, this.emoji, this.blockHeight, this.avatarSize);
+  const _Place(this.number, this.label, this.icon, this.medalColor,
+      this.blockHeight, this.avatarSize);
 
   final int number;
   final String label;
-  final String emoji;
+  final IconData icon;
+
+  /// Oro, plata o bronce: color de la medalla del avatar.
+  final Color medalColor;
   final double blockHeight;
   final double avatarSize;
 
@@ -121,8 +125,8 @@ class _PodiumColumn extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Text(place.emoji,
-                  style: TextStyle(fontSize: place.avatarSize * 0.45)),
+              child: Icon(place.icon,
+                  size: place.avatarSize * 0.55, color: place.medalColor),
             ),
             if (first)
               Positioned(

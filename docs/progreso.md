@@ -12,6 +12,48 @@
 | 4 — Pantallas en partida | ✅ Hecha | `afb024a` | 3 partidas mock, `LiveGameTopBar`, `TimerBar`, contenido mock, `lastMatchResultProvider` |
 | 5 — Resultados y tabs | ✅ Hecha | `036826c` | Marcador con podio/premios/estadísticas, revancha, tabs Configurar y Ajustes |
 | 6 — Tests, pulido y README final | ✅ Hecha | `e70878f` | Flujo completo, accesibilidad (30 checks), `_MinTapArea`, capturas, README final |
+| 7 — Trivia real | ✅ Hecha | `16106f8` | Banco grande de preguntas, `TriviaDeck` sin repetir, premios variables |
+| 8 — Charadas e Impostor reales | ✅ Hecha | *(sin commit)* | Ver "Fase 8" abajo |
+| 9 — Ajustes reales y cierre | ✅ Hecha | *(sin commit)* | Ver "Fase 9" abajo |
+
+### Fase 9 — Ajustes que funcionan y revisión final
+- **Ajustes guardados** con `shared_preferences` (`sharedPreferencesProvider`, cargado en `main()`; en tests es
+  `null` y viven en memoria). "Pantalla siempre encendida" ahora viene activado por defecto.
+- **Sonidos y vibración:** `core/feedback/game_feedback.dart` (`gameFeedbackProvider`) es el único punto que
+  reproduce sonidos (`audioplayers`) y vibra (`HapticFeedback`), y respeta los ajustes. Los 7 sonidos son WAV
+  propios generados con `dart run tool/generate_sounds.dart` → `assets/sounds/`. Se usan en los 3 juegos (acierto,
+  pasar/fallar, 3-2-1, fin del tiempo, revelar, robo) y al terminar la partida (fanfarria).
+- **Pantalla encendida:** `core/feedback/keep_screen_on.dart` (`wakelock_plus`), dentro de `LiveGameScaffold`:
+  solo mientras hay partida y el ajuste está activo.
+- **Trivia:** nombres editables de equipos (pulsador) y jugadores (turnos); `TeamNamesRow` compartido con Charadas.
+  `displayTeamNames`/`displayPlayerNames` evitan nombres vacíos en el marcador.
+- **Home:** se quitaron la campana y el avatar (eran decorativos); el selector de mesa se mantiene. Nuevo botón
+  **"¿Cómo se juega?"** (`catalog/widgets/how_to_play.dart`) con las reglas de `GameItem.rules`; dentro de una
+  partida muestra solo las del juego en curso.
+- **Marca:** logo y nombre del equipo en `assets/branding/` (`logo.svg`, `wordmark.svg`; los estilos CSS se pasaron
+  a atributos para `flutter_svg`). Se muestran en `RompeloAppBar`. El icono de la APK sale de
+  `assets/branding/icon.png` (render 1024 px del logo con Edge headless) con `dart run flutter_launcher_icons`
+  (config en `pubspec.yaml`, fondo adaptable `#991C2B`).
+- **Android:** nombre visible "Rómpelo", `minSdk = 24` (Android 7.0, RNF "versión mínima").
+- Tests: `soundPlayerProvider` y `screenWakeProvider` se reemplazan en `test_utils.dart`.
+
+### Fase 8 — Charadas e Impostor jugables
+- **`ShuffledDeck<T>`** (`games/providers/shuffled_deck.dart`): mazo barajado que no repite en la sesión;
+  `gameRandomProvider` (los tests lo fijan con `Random(7)`). Lo usan `charadesDeckProvider` e `impostorDeckProvider`.
+- **Contenido** separado en `games/data/charades_content.dart` (6 mazos × 42 cartas, con dificultad) e
+  `impostor_content.dart` (6 temas × 30 palabras, cada una con su pista). `mock_game_content.dart` los re-exporta.
+- **Charadas:** fases `ready` (pasa el teléfono) → `countdown` 3-2-1 → `playing` (el turno dura todo el reloj)
+  → `summary` (✓/✗ del turno). Puntos por dificultad (fácil 1, media 2, difícil 3); filtro de dificultad en la
+  config; mazo personalizado (en memoria). **Inclinación** con `sensors_plus` (`charades/tilt_detector.dart`,
+  eje Z: abajo = acierto, arriba = pasar, hay que volver a la frente para el siguiente gesto); la pantalla se fija
+  en vertical durante la partida. En "todos vs todos" solo suma el actor.
+- **Impostor:** por ronda, palabra/impostores/quién empieza al azar → **reparto pasando el celular** (mantener
+  presionado para ver el rol; vibración si "Turno a ciegas háptico") → debate por turnos con "¿Olvidaste tu
+  palabra?" → votación de N acusados → última oportunidad del impostor (adivinar la palabra) → veredicto con
+  marcador acumulado, "Otra ronda" o "Ver marcador". Puntos: ciudadanos +1, impostor que escapa +2, atrapado que
+  adivina +3.
+- Tests: `tiltSensorEnabledProvider` se apaga en `test_utils.dart`; con los timers apagados se salta el 3-2-1 y los
+  turnos terminan desde la pausa ("Terminar turno").
 
 ## Instalar Flutter en el contenedor
 El contenedor de cada sesión es efímero y no trae Flutter. `storage.googleapis.com` y `pub.dev` son accesibles.
@@ -199,15 +241,11 @@ Ojo: `flutter test` con `test/widget_test.dart` de `flutter create` presente fal
 
 ## Pendientes / siguiente etapa (lógica real de juego)
 El plan del front (fases 0–6) está completo. Lo que queda fuera de su alcance, por prioridad sugerida:
-1. **Persistencia local** (p. ej. `shared_preferences` o `hive`): hoy la configuración, los ajustes y el último
-   marcador viven en memoria y se pierden al cerrar la app. Los `Notifier` ya centralizan el estado: basta con
-   cargar en `build()` y guardar al cambiar.
-2. **Contenido real**: reemplazar `mock_game_content.dart` por JSON en `assets/` (cientos de cartas/preguntas por
-   mazo), barajado aleatorio y sin repetir; el "Mazo personalizado rápido" de Charadas sigue mostrando "llegan pronto".
-3. **Lógica de juego real**: impostores aleatorios (hoy `mockImpostors` es determinista), fase secreta de pasar el
-   móvil jugador por jugador, votación individual, Trivia con pulsador real y rondas completas.
-4. **Sensores y feedback**: giroscopio para "Arriba: Pasar / Abajo: Acierto" en Charadas (`sensors_plus`),
-   vibración (`HapticFeedback`), sonidos y `wakelock` para "pantalla siempre encendida" (hoy los ajustes son mock).
+1. **Persistencia local**: los ajustes ya se guardan (fase 9). La configuración de partidas, los nombres y el
+   último marcador siguen en memoria; se puede usar el mismo `sharedPreferencesProvider`.
+2. ~~Contenido real y barajado~~ (hecho en fases 7–8). Opcional: pasar el contenido a JSON en `assets/`.
+3. ~~Lógica real de Charadas e Impostor~~ (fase 8).
+4. ~~Sonidos, vibración y pantalla encendida~~ (fase 9).
 5. **Pruebas en dispositivo**: el contenedor no tiene emulador; validar en Android real el arranque < 3 s, el
    rendimiento de las animaciones y el texto grande del sistema (`textScaler`).
 6. **Ilustraciones**: los avatares e imágenes del mockup (no descargables desde el entorno) siguen como

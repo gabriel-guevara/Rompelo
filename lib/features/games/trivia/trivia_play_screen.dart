@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 import '../../../core/constants/app_color.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../../core/feedback/game_feedback.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/plural.dart';
 import '../../../core/widgets/chunky_button.dart';
@@ -24,8 +25,6 @@ const int kTriviaPoints = 50;
 /// Penalización por robar turno y fallar ("-20 pts si fallas").
 const int kStealPenalty = 20;
 
-/// Equipos del modo "Pulsador en pantalla" (en grupo).
-const List<String> kTriviaTeams = ['Team Vino', 'Team Burbujas'];
 /// Frase final del marcador: cambia en cada partida.
 const List<String> kTriviaSummaries = [
   '¡Cerebros en llamas!',
@@ -50,6 +49,7 @@ class TriviaPlayScreen extends ConsumerStatefulWidget {
 class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
   late final TriviaSetup _setup =
       ref.read(matchSetupProvider('trivia')) as TriviaSetup;
+  late final GameFeedback _fx = ref.read(gameFeedbackProvider);
 
   late final List<TriviaQuestion> _questions = ref
       .read(triviaDeckProvider)
@@ -59,7 +59,9 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
 
   /// En grupo: 2 equipos. Por turnos: cada jugador suma para sí.
   late final List<String> _participants =
-      _teams ? kTriviaTeams : _setup.playerNames;
+      _teams
+          ? displayTeamNames(_setup.teamNames)
+          : displayPlayerNames(_setup.playerNames);
 
   late final List<int> _scores = List.filled(_participants.length, 0);
 
@@ -127,6 +129,8 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
       _trackDeficits();
     });
 
+    _fx.both(correct ? GameSound.correct : GameSound.pass,
+        correct ? Haptic.medium : Haptic.light);
     final name = _participants[who];
     showGameMessage(
       context,
@@ -147,6 +151,7 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
       _answering = (_answering + 1) % _participants.length;
       _stealTries[_answering]++;
     });
+    _fx.both(GameSound.tap, Haptic.heavy);
     showGameMessage(context, '¡${_participants[_answering]} roba el turno!');
   }
 
@@ -157,6 +162,7 @@ class _TriviaPlayScreenState extends ConsumerState<TriviaPlayScreen> {
       _revealed = true;
       _streak[_answering] = 0;
     });
+    _fx.both(GameSound.timeUp, Haptic.heavy);
     showGameMessage(context, '¡Tiempo! Nadie suma en esta pregunta');
   }
 
